@@ -11,6 +11,22 @@ int limite_barcos[]={1,1,1,1};
 
 int x=-1, y=-1;
 
+char *limpa_tela;
+
+void sistema()
+{
+        // código para windows
+        #if defined(MEU_API_WINDOWS)
+                limpa_tela = "cls"
+        // código para linux
+        #elif defined(MEU_API_LINUX)
+                limpa_tela = "clear"
+        // código para OS X.
+        #elif defined(MEU_API_OSX)
+                limpa_tela = "clear"
+        #endif
+}
+
 void print_board(int **matriz, int tam)
 {
         int i, j;
@@ -78,10 +94,10 @@ void imprime_matriz()
         //primeira linha
         printf("\t1  2  3  4  5  6  7  8  9  10\n\n");
 
-        for (i=0;i<10;i++)
+        for (i=0; i<10; i++)
         {
                 printf("%c:\t", c++);
-                for (j=0;j<10;j++)
+                for (j=0; j<10; j++)
                 {
                         printf("%d  ", matriz[i][j]);
                 }
@@ -99,10 +115,10 @@ void imprime_cpu()
         //primeira linha
         printf("\t1  2  3  4  5  6  7  8  9  10\n\n");
 
-        for (i=0;i<10;i++)
+        for (i=0; i<10; i++)
         {
                 printf("%c:\t", c++);
-                for (j=0;j<10;j++)
+                for (j=0; j<10; j++)
                 {
                         printf("%d  ", matriz_cpu[i][j]);
                 }
@@ -120,10 +136,10 @@ void imprime_mascara()
         //primeira linha
         printf("\t1  2  3  4  5  6  7  8  9  10\n\n");
 
-        for (i=0;i<10;i++)
+        for (i=0; i<10; i++)
         {
                 printf("%c:\t", c++);
-                for (j=0;j<10;j++)
+                for (j=0; j<10; j++)
                 {
                         printf("%c  ", mascara_cpu[i][j]);
                 }
@@ -142,15 +158,15 @@ void imprime_jogo()
         //primeira linha
         printf("\t1  2  3  4  5  6  7  8  9  10\t\t1  2  3  4  5  6  7  8  9  10\n\n");
 
-        for (i=0;i<10;i++)
+        for (i=0; i<10; i++)
         {
                 printf("%c:\t", c);
-                for (j=0;j<10;j++)
+                for (j=0; j<10; j++)
                 {
                         printf("%c  ", mascara[i][j]);
                 }
                 printf("\t%c:\t", c++);
-                for (j=0;j<10;j++)
+                for (j=0; j<10; j++)
                 {
                         printf("%c  ", mascara_cpu[i][j]);
                 }
@@ -169,20 +185,20 @@ int isere_barco (int barco, int y, int x, int dir, int matrizInsere[10][10])
         {
                 if (x + barco >= 10) return 1;
 
-                for (i = 0 ; i < barco ; i++)
+                for (i = 0; i < barco; i++)
                         if(matrizInsere[y][x+i] > 0) return 2;
 
-                for (i = 0 ; i < barco ; i++)
+                for (i = 0; i < barco; i++)
                         matrizInsere[y][x+i] = 1;
         }
         else if (dir == 2)
         {
                 if (y + barco >= 10) return 1;
 
-                for (i = 0 ; i < barco ; i++)
+                for (i = 0; i < barco; i++)
                         if(matrizInsere[y+i][x] > 0) return 2;
 
-                for (i = 0 ; i < barco ; i++)
+                for (i = 0; i < barco; i++)
                         matrizInsere[y+i][x] = 1;
         }
 
@@ -209,8 +225,8 @@ void preenche_barcos()
         while (maxbarcos > 0)
         {
                 printf("Digite o barco:\n2 - %s(%d)\n3 - %s(%d)\n4 - %s(%d)\n5 - %s(%d)\n", \
-                        tipo_barco[0], limite[0], tipo_barco[1], limite[1], \
-                        tipo_barco[2], limite[2], tipo_barco[3], limite[3]);
+                       tipo_barco[0], limite[0], tipo_barco[1], limite[1], \
+                       tipo_barco[2], limite[2], tipo_barco[3], limite[3]);
                 scanf(" %d", &barco);
                 while (limite[barco-2] == 0 || barco < 2 || barco > 5)
                 {
@@ -443,7 +459,8 @@ int main ()
         int  **matriz_b;
         char  **mascara_a;
         char  **mascara_b;
-
+        // Identifica qual sistema esta sendo usado
+        sistema();
         matriz_a = (int**)malloc(tam * sizeof(int*));
         matriz_b = (int**)malloc(tam * sizeof(int*));
         mascara_a = (char**)malloc(tam * sizeof(char*));
@@ -460,7 +477,7 @@ int main ()
                 mascara_b[i] = (char*)malloc(tam * sizeof(char));
                 memset(mascara_b[i], '.', tam);
 
-                for (j=0;j<10;j++)
+                for (j=0; j<10; j++)
                 {
                         // mapa cpu
                         matriz_cpu[i][j]=0;
@@ -475,20 +492,20 @@ int main ()
         print_board(matriz_a, 10);
 
         /*
-        preenche_cpu();
+           preenche_cpu();
 
-        imprime_matriz();
+           imprime_matriz();
 
-        //imprime_cpu();
+           //imprime_cpu();
 
-        //imprime_mascara();
+           //imprime_mascara();
 
-        preenche_barcos();
+           preenche_barcos();
 
-        imprime_jogo();
+           imprime_jogo();
 
-        jogar();
-        */
+           jogar();
+         */
 
         loop(i, tam)
         {

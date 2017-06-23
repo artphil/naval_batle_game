@@ -20,11 +20,27 @@
 
 #define BARCOS {"Corveta","Submarino","Fragata","Cruzador","Porta Aviões"}
 
-// Defincoes
-// typedef for(int i=0;i<a;i++) loop(a)
+/* Defincoes */
+// Definição do sistema operacional
+#ifdef defined(__WIN32__) || defined(__NT__)
+#    define WINDOWS
+#  endif
+
+#if defined(__linux__) || defined(__linux)
+#  define LINUX
+#endif
+
+#if defined(__APPLE__)
+#  define OSX
+#endif
+
+// Simplifacacao de funcoes
 #define loop(i,a) for(i=0;i<a;i++)
 
 /* Funcoes */
+// Identifica qual sistema esta sendo usado
+void sistema();
+
 // Imprime uma tabela numerica com a borda alfabetica
 void print_board(int **matriz,int tam);
 
