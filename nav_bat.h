@@ -6,6 +6,7 @@
 /* Bibliotecas utilizadas */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <ctype.h>
 
@@ -19,8 +20,23 @@
 
 #define BARCOS {"Corveta","Submarino","Fragata","Cruzador","Porta Aviões"}
 
+// Defincoes
+// typedef for(int i=0;i<a;i++) loop(a)
+#define loop(i,a) for(i=0;i<a;i++)
+
 /* Funcoes */
-void print_board();
+// Imprime uma tabela numerica com a borda alfabetica
+void print_board(int **matriz,int tam);
+
+// Imprime uma tabela com os valores ocultos
+void print_mask(int **matriz, int tam);
+
+
+// Le um caractere da tela de forma segura
+int read_char (char i, char f);
+
+
+
 
 // funcoes antigas
 void imprime_matriz();

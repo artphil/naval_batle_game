@@ -11,6 +11,65 @@ int limite_barcos[]={1,1,1,1};
 
 int x=-1, y=-1;
 
+void print_board(int **matriz, int tam)
+{
+        int i, j;
+        printf("    ");
+        loop(i,tam) printf("%c  ", ('M'+i));
+        printf("\n\n");
+
+        loop(i,tam)
+        {
+                printf("%c   ", ('A'+i));
+                loop(j,tam)
+                {
+                        printf("%d  ", matriz[i][j]);
+                }
+                printf("\n");
+        }
+        printf("\n");
+}
+
+void print_mask(int **matriz, int tam)
+{
+        int i, j;
+        printf("    ");
+        loop(i,tam) printf("%c  ", ('M'+i));
+        printf("\n\n");
+
+        loop(i,tam)
+        {
+                printf("%c   ", ('A'+i));
+                loop(j,tam)
+                {
+                        printf("%c  ", matriz[i][j]);
+                }
+                printf("\n");
+        }
+        printf("\n");
+}
+
+int read_char (char i, char f)
+{
+        char c;
+        scanf(" %c", &c);
+
+        if (c < i) return -1;
+        if (c > f) return -1;
+
+        return (int) c - i;
+}
+
+
+
+
+
+
+
+
+
+
+
 void imprime_matriz()
 {
         system("clear");
@@ -378,10 +437,29 @@ int jogar ()
 
 int main ()
 {
-        int i, j;
+        int i, j, tam=10;
 
-        for (i=0;i<10;i++)
+        int  **matriz_a;
+        int  **matriz_b;
+        char  **mascara_a;
+        char  **mascara_b;
+
+        matriz_a = (int**)malloc(tam * sizeof(int*));
+        matriz_b = (int**)malloc(tam * sizeof(int*));
+        mascara_a = (char**)malloc(tam * sizeof(char*));
+        mascara_b = (char**)malloc(tam * sizeof(char*));
+
+        loop(i, tam)
         {
+                matriz_a[i] = (int*)malloc(tam * sizeof(int));
+                memset(matriz_a[i], 0, tam);
+                matriz_b[i] = (int*)malloc(tam * sizeof(int));
+                memset(matriz_b[i], 0, tam);
+                mascara_a[i] = (char*)malloc(tam * sizeof(char));
+                memset(mascara_a[i], '.', tam);
+                mascara_b[i] = (char*)malloc(tam * sizeof(char));
+                memset(mascara_b[i], '.', tam);
+
                 for (j=0;j<10;j++)
                 {
                         // mapa cpu
@@ -394,7 +472,9 @@ int main ()
                         matriz[i][j]=0;
                 }
         }
+        print_board(matriz_a, 10);
 
+        /*
         preenche_cpu();
 
         imprime_matriz();
@@ -408,6 +488,19 @@ int main ()
         imprime_jogo();
 
         jogar();
+        */
+
+        loop(i, tam)
+        {
+                free(matriz_a[i]);
+                free(matriz_b[i]);
+                free(mascara_a[i]);
+                free(mascara_b[i]);
+        }
+        free(matriz_a);
+        free(matriz_b);
+        free(mascara_a);
+        free(mascara_b);
 
         return 0;
 }
