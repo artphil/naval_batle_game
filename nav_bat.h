@@ -5,33 +5,59 @@
 
 /* Bibliotecas utilizadas */
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
 
-/* Variaveis globais */
-// Naves
-#define CORVETA 2
-#define SUBMARINO 3
-#define FRAGATA 4
-#define CRUZADOR 5
-#define PORTA_AVIAO 6
+/* Definicao de ariaveis globais constantes */
 
-#define BARCOS {"Corveta","Submarino","Fragata","Cruzador","Porta Aviões"}
+/*      Naves
+Nome            Tamanho
+Corveta         2
+Submarino       3
+Fragata         4
+Cruzador        5
+Porta Aviões    6
+*/
+
+#define QTD_BARCOS 5
+
+const int max_barcos[3][QTD_BARCOS] = {
+        {1,1,1,1,0},
+        {2,2,2,1,1},
+        {3,3,2,2,1}
+};
+
+const char *nome_barcos[] = {
+        "Corveta",
+        "Submarino",
+        "Fragata",
+        "Cruzador",
+        "Porta Aviões"
+};
+
+
+// Tabuleiro
+#define NAVE  'H'
+#define AGUA  '0'
+#define VAZIO '.'
+
+const int tam_mesa[] = {8,10,12};
 
 /* Defincoes */
 // Definição do sistema operacional
-#ifdef defined(__WIN32__) || defined(__NT__)
-#    define WINDOWS
-#  endif
-
 #if defined(__linux__) || defined(__linux)
-#  define LINUX
+        #define LINUX
 #endif
 
 #if defined(__APPLE__)
-#  define OSX
+        #define OSX
+#endif
+
+#ifdef defined(__WIN32__) || defined(__NT__)
+        #define WINDOWS
 #endif
 
 // Simplifacacao de funcoes
@@ -41,15 +67,23 @@
 // Identifica qual sistema esta sendo usado
 void sistema();
 
+//
+char **init_board(char a);
+
 // Imprime uma tabela numerica com a borda alfabetica
-void print_board(int **matriz,int tam);
-
-// Imprime uma tabela com os valores ocultos
-void print_mask(int **matriz, int tam);
-
+void print_board(char **matriz);
 
 // Le um caractere da tela de forma segura
 int read_char (char i, char f);
+
+// Coloca um barco no Tabuleiro
+int put_nav(char **matriz, int barco, int y, int x, int dir);
+
+// preenchimento automatico de barcos
+void fill_auto(char **matriz);
+
+//
+void game();
 
 
 
