@@ -11,6 +11,24 @@
 #include <time.h>
 #include <ctype.h>
 
+/* TADs */
+// Alvo
+typedef struct ALVO
+{
+        int linha;
+        int coluna;
+struct ALVO *prox;    // Ponteiro para lista
+} alvo;
+
+// Jogador
+typedef struct JOGADOR
+{
+        char  nome[20]; // Nome do jogador
+        int   acertou;  // Se acertou o ultimo tiro
+        alvo *certos;   // Lista de tiros certos
+} jogador;
+
+
 /* Definicao de ariaveis globais constantes */
 
 /*      Naves
@@ -42,7 +60,10 @@ const char *nome_barcos[] = {
 // Tabuleiro
 #define NAVE  'H'
 #define AGUA  '0'
-#define VAZIO '.'
+#define SUJO  '@'
+#define DANO  '#'
+#define ERRO  'X'
+#define NADA  '.'
 
 const int tam_mesa[] = {8,10,12};
 
@@ -70,8 +91,14 @@ void sistema();
 //
 char **init_board(char a);
 
-// Imprime uma tabela numerica com a borda alfabetica
+//
+void free_board(char **matriz);
+
+// Imprime uma tabela com a borda alfabetica
 void print_board(char **matriz);
+
+//
+void print_game(char **m_a, char **m_b);
 
 // Le um caractere da tela de forma segura
 int read_char (char i, char f);
@@ -81,6 +108,15 @@ int put_nav(char **matriz, int barco, int y, int x, int dir);
 
 // preenchimento automatico de barcos
 void fill_auto(char **matriz);
+
+//
+void fill_man(char **matriz);
+
+//
+int play_auto (jogador j, char **matriz, char **mascara);
+
+//
+int play_man (jogador j, char **matriz, char **mascara);
 
 //
 void game();

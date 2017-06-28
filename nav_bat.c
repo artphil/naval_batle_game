@@ -42,6 +42,16 @@ char **init_board(char a)
         return matriz;
 }
 
+void free_board(char **matriz)
+{
+        int i;
+        loop(i, tam_mesa[nivel])
+        {
+                free(matriz[i]);
+        }
+        free(matriz);
+}
+
 void print_board(char **matriz)
 {
         int i, j;
@@ -153,7 +163,7 @@ void fill_auto(char **matriz)
                 if (limite[barco] == 0)
                         barco--;
                 else if ((put_nav(matriz, barco+2, rand()%tam_mesa[nivel], \
-                          rand()%tam_mesa[nivel], (rand()%2))) == 0)
+                                  rand()%tam_mesa[nivel], (rand()%2))) == 0)
                 {
                         limite[barco]--;
                         total--;
@@ -182,16 +192,16 @@ void fill_man(char **matriz)
                 loop(i, QTD_BARCOS)
                 {
                         if (limite[i] > 0)
-                        printf("%d - %12s ( %d )\n", i+1, nome_barcos[i], limite[i]);
+                                printf("%d - %12s ( %d )\n", i+1, nome_barcos[i], limite[i]);
                 }
 
                 while ((barco=read_char('1','0'+QTD_BARCOS)) < 0 || \
-                        limite[barco] == 0)
+                       limite[barco] == 0)
                 {
                         if (limite[barco] == 0)
                                 printf("Todos os %s ja foram usados.\nTente novamente:\n", \
-                                        nome_barcos[barco]);
-                        else    printf("Entrada invalida.\nTente novamente:\n");
+                                       nome_barcos[barco]);
+                        else printf("Entrada invalida.\nTente novamente:\n");
                 }
 
                 printf("Digite a linha do %s:\n", nome_barcos[barco]);
@@ -207,7 +217,7 @@ void fill_man(char **matriz)
                 }
 
                 printf("Digite a orientacao do %s:\n 1 - Horizontal.\n 2 - Vertical.\n", \
-                        nome_barcos[barco]);
+                       nome_barcos[barco]);
                 while ((direcao=read_char('1','2')) < 0)
                 {
                         printf("Entrada invalida.\nTente novamente:\n");
@@ -220,22 +230,150 @@ void fill_man(char **matriz)
                 }
                 else if (i == 1)
                         printf("O %s ultrapassa os limites do mapa\nTente novamente:\n", \
-                                nome_barcos[barco]);
+                               nome_barcos[barco]);
                 else if (i == 2)
                         printf("O %s sobrepoe aliado\nTente novamente:\n", \
-                                nome_barcos[barco]);
+                               nome_barcos[barco]);
         }
 
 }
 
+int shot (char **matriz, char **mascara, alvo a)
+{
+        if (matriz[a.linha][a.coluna] == AGUA)
+        {
+                matriz[a.linha][a.coluna] = SUJO;
+                mascara[a.linha][a.coluna] = ERRO;
+                return 0;
+        }
+        else
+        if (matriz_cpu[a.linha][a.coluna] == NAVE)
+        {
+                matriz[a.linha][a.coluna] = SUJO;
+                mascara[a.linha][a.coluna] = DANO;
+                return 1;
+        }
+        else
+        {
+                return -1;
+        }
+}
+
+
+int play_auto (jogador j, char **matriz, char **mascara)
+{
+        alvo a;
+        int fim = -1;
+
+        while (fim < 0)
+        {
+                if (j.acertou)
+                {
+                        /*
+                        if (j.ultimo->linha<(tam_mesa[nivel]-1) && \
+                        matriz[j.ultimo->linha+1][j.ultimo->coluna] == AGUA)
+                        {
+                                a->linha = matriz[j.ultimo->linha+1;
+                                a->coluna = j.ultimo->coluna;
+                        }
+                        else if (y<9 && matriz[x][y+1] == 0)
+                        {
+                                linha = x;
+                                coluna = y+1;
+                        }
+                        else if (x>0 && matriz[x-1][y] == 0)
+                        {
+                                linha = x-1;
+                                coluna = y;
+                        }
+                        else if (y>0 && matriz[x][y-1] == 0)
+                        {
+                                linha = x;
+                                coluna = y-1;
+                        }
+                        else*/
+                        {
+                                a.linha = rand()%tam_mesa[nivel];
+                                a.coluna = rand()%tam_mesa[nivel];
+                        }
+                }
+                else
+                {
+                        a.linha = rand()%tam_mesa[nivel];
+                        a.coluna = rand()%tam_mesa[nivel];
+                }
+
+                fim = shot(matriz, mascara, a);
+                print_game(mascara, mascara);
+
+                if (fim == 1)
+                {
+                        a.prox = j.certos;
+                        j.certos = &a;
+                        j.acertou = 1;
+                }
+                else
+                if (fim == 0) {
+                        j.acertou = 0;
+                }
+        }
+
+        return fim;
+}
+
+int play_man (jogador j, char **matriz, char **mascara)
+{
+        alvo a;
+        int fim = -1;
+
+        while (fim < 0)
+        {
+                printf("Digite a linha que quer atacar:\n");
+                while ((a.linha=read_char('A','A'+tam_mesa[nivel])) < 0)
+                {
+                        printf("Entrada invalida.\nTente novamente:\n");
+                }
+
+
+                printf("Digite a coluna que quer atacar:\n");
+                while ((a.coluna=read_char('M','M'+tam_mesa[nivel])) < 0)
+                {
+                        printf("Entrada invalida.\nTente novamente:\n");
+                }
+
+                fim = shot(matriz, mascara, a);
+
+                if (fim == -1)
+                {
+                        printf("Voce ja atirou aqui.\nTente denovo:\n");
+                }
+                else
+                if (fim == 1)
+                {
+                        printf("Belo tiro!\n");
+                }
+                else
+                {
+                        printf("Voce errou.\n");
+                }
+        }
+        return fim;
+}
 
 void game()
 {
-        int   i;
+        int i;
+
+        jogador j1, j2;
         char  **matriz_a;
         char  **matriz_b;
         char  **mascara_a;
         char  **mascara_b;
+
+        j1.certos = j2.certos = NULL;
+        j1.acertou = j2.acertou = 0;
+        strcpy(j1.nome, "Jogador 1");
+        strcpy(j2.nome, "Jogador 2");
 
         do {
                 printf("Digite o nivel do jogo:\n");
@@ -243,25 +381,24 @@ void game()
 
         matriz_a  = init_board(AGUA);
         matriz_b  = init_board(AGUA);
-        mascara_a = init_board(VAZIO);
-        mascara_b = init_board(VAZIO);
+        mascara_a = init_board(NADA);
+        mascara_b = init_board(NADA);
 
         fill_auto(matriz_a);
         fill_auto(matriz_b);
 
-        print_game(mascara_a, mascara_b);
-
-        loop(i, tam_mesa[nivel])
+        while (1)
         {
-                free(matriz_a[i]);
-                free(matriz_b[i]);
-                free(mascara_a[i]);
-                free(mascara_b[i]);
+                play_man(j1, matriz_b, mascara_b);
+                play_man(j2, matriz_a, mascara_a);
         }
-        free(matriz_a);
-        free(matriz_b);
-        free(mascara_a);
-        free(mascara_b);
+
+
+
+        free_board(matriz_a);
+        free_board(matriz_b);
+        free_board(mascara_a);
+        free_board(mascara_b);
 }
 
 
@@ -271,7 +408,7 @@ void game()
 
 
 
-
+/*
 void imprime_matriz()
 {
         system(limpa_tela);
@@ -636,26 +773,26 @@ int jogar ()
         else printf("####LOSER####");
         return 0;
 }
-
+*/
 int main ()
 {
         sistema();
         game();
         /*
-        int i, j, tam=10;
+           int i, j, tam=10;
 
-        int  **matriz_a;
-        int  **matriz_b;
-        char  **mascara_a;
-        char  **mascara_b;
-        // Identifica qual sistema esta sendo usado
-        matriz_a = (int**)malloc(tam * sizeof(int*));
-        matriz_b = (int**)malloc(tam * sizeof(int*));
-        mascara_a = (char**)malloc(tam * sizeof(char*));
-        mascara_b = (char**)malloc(tam * sizeof(char*));
+           int  **matriz_a;
+           int  **matriz_b;
+           char  **mascara_a;
+           char  **mascara_b;
+           // Identifica qual sistema esta sendo usado
+           matriz_a = (int**)malloc(tam * sizeof(int*));
+           matriz_b = (int**)malloc(tam * sizeof(int*));
+           mascara_a = (char**)malloc(tam * sizeof(char*));
+           mascara_b = (char**)malloc(tam * sizeof(char*));
 
-        loop(i, tam)
-        {
+           loop(i, tam)
+           {
                 matriz_a[i] = (int*)malloc(tam * sizeof(int));
                 memset(matriz_a[i], 0, tam);
                 matriz_b[i] = (int*)malloc(tam * sizeof(int));
@@ -676,14 +813,14 @@ int main ()
                         // mapa usuario
                         matriz[i][j]=0;
                 }
-        }
-        print_board(matriz_a, 10);
+           }
+           print_board(matriz_a, 10);
 
 
 
-        imprime_matriz();
+           imprime_matriz();
 
-        /*
+           /*
            imprime_cpu();
            preenche_cpu();
 
@@ -695,18 +832,18 @@ int main ()
 
            jogar();
 
-        loop(i, tam)
-        {
+           loop(i, tam)
+           {
                 free(matriz_a[i]);
                 free(matriz_b[i]);
                 free(mascara_a[i]);
                 free(mascara_b[i]);
-        }
-        free(matriz_a);
-        free(matriz_b);
-        free(mascara_a);
-        free(mascara_b);
-        */
+           }
+           free(matriz_a);
+           free(matriz_b);
+           free(mascara_a);
+           free(mascara_b);
+         */
 
         return 0;
 }
