@@ -4,15 +4,15 @@
 #include "source.h"
 
 // Alvo
+typedef struct ALVO *alvo;
 struct ALVO
 {
-        int linha;
-        int coluna;
-struct ALVO *prox;    // Ponteiro para lista
+        int   linha;
+        int   coluna;
+        alvo  prox;    // Ponteiro para lista
 };
-typedef struct ALVO *alvo;
 
-alvo new_alvo();
+alvo new_alvo(int l, int c);
 void free_alvo(alvo a);
 
 #endif

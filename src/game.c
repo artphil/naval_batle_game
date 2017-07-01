@@ -22,19 +22,131 @@ const char *nome_barcos[QTD_BARCOS] = {
 const int tam_mesa[3] = {10,15,20};
 
 int pos_x,pos_y,nivel;
+typedef int (*func_t)(jogador j, mesa matriz, mesa mascara);
 
-void sistema()
+
+/* Lista de fucoes deste programa */
+void game();
+int read_char (char i, char f);
+int read_int (int i, int f);
+void print_game(mesa m_a, mesa m_b);
+void to_fill(jogador j, mesa m);
+void fill_auto(mesa matriz);
+void fill_man(mesa matriz);
+int play_auto (jogador j, mesa matriz, mesa mascara);
+int play_man (jogador j, mesa matriz, mesa mascara);
+int shot (mesa matriz, mesa mascara, alvo a);
+
+
+void game()
 {
-        // código para windows
-        #if defined(WINDOWS)
-        limpa_tela = "cls";
-        // código para linux
-        #elif defined(LINUX)
-        limpa_tela = "clear";
-        // código para OS X.
-        #elif defined(OSX)
-        limpa_tela = "clear";
-        #endif
+        int i,
+            p=0,
+            jogadores;
+        char nome[20];
+        func_t joga_1, joga_2;
+
+        jogador j1 = new_jogador("Jogador 1");
+        jogador j2 = new_jogador("Jogador 2");
+        mesa matriz_a;
+        mesa matriz_b;
+        mesa mascara_a;
+        mesa mascara_b;
+
+        system(limpa_tela);
+
+        printf("\
+********************************************************************************\n\
+*                              BATAHA NAVAL                                    *\n\
+********************************************************************************\n\
+        \n");
+        do {
+                printf("Digite o numero de jogadores:  (1-2)\n");
+        } while ((jogadores=read_char('0','2')) < 0);
+
+
+        do {
+                printf("Digite o nivel de dificuldade: (1-3)\n");
+        } while ((nivel=read_char('1','3')) < 0);
+
+        set_size(tam_mesa[nivel]);
+
+        fgets(nome, 20, stdin);
+        if (jogadores > 0)
+        {
+                printf("Digite o nome do primeiro jogador, ou enter para defout:\n");
+                nome[0] = '\0';
+                fgets(nome, 20, stdin);
+                nome[19] = '\0';
+                jog_set_name(j1, nome);
+        }
+
+        if (jogadores > 1)
+        {
+                printf("Digite o nome do segundo jogador, ou enter para defout:\n");
+                nome[0] = '\0';
+                fgets(nome, 20, stdin);
+                nome[19] = '\0';
+                jog_set_name(j2, nome);
+        }
+
+        matriz_a  = new_mesa(AGUA);
+        matriz_b  = new_mesa(AGUA);
+        mascara_a = new_mesa(NADA);
+        mascara_b = new_mesa(NADA);
+
+        loop (i, QTD_BARCOS)
+        {
+                p += max_barcos[nivel][i]*(i+2);
+        }
+        j1->pecas = j2->pecas = p;
+
+        joga_1 = (func_t) *play_auto;
+        joga_2 = (func_t) *play_auto;
+
+        if (jogadores > 1)
+        {
+                to_fill(j1, matriz_a);
+                to_fill(j2, matriz_b);
+                joga_1 = (func_t) *play_man;
+                joga_2 = (func_t) *play_man;
+        }
+        else
+        if (jogadores > 0)
+        {
+                to_fill(j1, matriz_a);
+                fill_auto(matriz_b);
+                joga_1 = (func_t) *play_man;
+        }
+        else
+        {
+                fill_auto(matriz_a);
+                fill_auto(matriz_b);
+        }
+
+
+        print_game(mascara_a, mascara_b);
+
+        while (j1->pecas > 0 && j2->pecas > 0)
+        {
+                j2->pecas -= joga_1(j1, matriz_b, mascara_b);
+                print_game(mascara_a, mascara_b);
+                printf("Restam %d pecas do %s\n", j2->pecas, j2->nome);
+                j1->pecas -= joga_2(j2, matriz_a, mascara_a);
+                print_game(mascara_a, mascara_b);
+                printf("Restam %d pecas do %s\n", j1->pecas, j1->nome);
+        }
+
+        strcpy(nome, (j1->pecas > 0) ? j1->nome : j2->nome);
+
+        printf("\nO jogador %s Venceu!!\n\n", nome);
+
+        free_jogador(j1);
+        free_jogador(j2);
+        free_board(matriz_a);
+        free_board(matriz_b);
+        free_board(mascara_a);
+        free_board(mascara_b);
 }
 
 void print_game(mesa m_a, mesa m_b)
@@ -42,9 +154,26 @@ void print_game(mesa m_a, mesa m_b)
         int i, j;
 
         system(limpa_tela);
+        // Titulo
+        loop(i,tam_mesa[nivel]) printf("%s", "***");
+        printf("***************");
+        loop(i,tam_mesa[nivel]) printf("%s", "***");
+
+        printf("\n*");
+        loop(i,tam_mesa[nivel]) printf("%s", "   ");
+        printf("BATALHA NAVAL");
+        loop(i,tam_mesa[nivel]) printf("%s", "   ");
+        printf("*\n");
+
+        loop(i,tam_mesa[nivel]) printf("%s", "***");
+        printf("***************");
+        loop(i,tam_mesa[nivel]) printf("%s", "***");
+        printf("\n\n");
+
+        // Tabuleiros
         printf("   ");
         loop(i,tam_mesa[nivel]) printf("%2d ", (1+i));
-        printf("    ");
+        printf("       ");
         loop(i,tam_mesa[nivel]) printf("%2d ", (1+i));
         printf("\n\n");
 
@@ -55,7 +184,7 @@ void print_game(mesa m_a, mesa m_b)
                 {
                         printf("%c  ", m_a[i][j]);
                 }
-                printf("    ");
+                printf("       ");
                 loop(j,tam_mesa[nivel])
                 {
                         printf("%c  ", m_b[i][j]);
@@ -90,12 +219,27 @@ int read_int (int i, int f)
 
         return c - i;
 }
+
+void to_fill(jogador j, mesa m)
+{
+        int p;
+
+        printf("%s\nDeseja preencher automatico\n 1 - Sim\n 2 - Nao\n", j->nome);
+        p=read_char('1','2');
+        while (p < 0) ;
+        {
+                printf("Valor invalido\n");
+                p=read_char('1','2');
+        }
+
+        if (p) fill_man(m);
+        else fill_auto(m);
+}
+
 void fill_auto(mesa matriz)
 {
-        srand (time (NULL));
-
         int i;
-        alvo a = new_alvo();
+        alvo a = new_alvo(0,0);
         int barco = QTD_BARCOS-1;
         int total = 0;
         int limite[QTD_BARCOS];
@@ -124,7 +268,7 @@ void fill_auto(mesa matriz)
 void fill_man(mesa matriz)
 {
         int i;
-        alvo a = new_alvo();
+        alvo a = new_alvo(0,0);
         int direcao, barco;
         int total = 0;
         int limite[QTD_BARCOS];
@@ -162,7 +306,7 @@ void fill_man(mesa matriz)
                 }
 
                 printf("Digite a coluna do %s:\n", nome_barcos[barco]);
-                while ((a->coluna=read_int(1 ,tam_mesa[nivel])) < 0)
+                while ((a->coluna=read_int(1,tam_mesa[nivel])) < 0)
                 {
                         printf("Entrada invalida\nTente novamente:\n");
                 }
@@ -213,46 +357,19 @@ int shot (mesa matriz, mesa mascara, alvo a)
 
 int play_auto (jogador j, mesa matriz, mesa mascara)
 {
-        alvo a = new_alvo();
+        alvo a, p;
         int fim = -1;
 
         while (fim < 0)
         {
-                if (j->acertou)
+                if (j->alvos != NULL)
                 {
-                        a->linha = j->certos->linha;
-                        a->coluna = j->certos->coluna;
-
-                        if (a->linha<(tam_mesa[nivel]-1) && \
-                        mascara[a->linha+1][a->coluna] == NADA)
-                        {
-                                a->linha++;
-                        }
-                        else if (a->coluna<(tam_mesa[nivel]-1) && \
-                        mascara[a->linha][a->coluna+1] == NADA)
-                        {
-                                a->coluna++;
-                        }
-                        else if (a->linha>0 && \
-                        mascara[a->linha-1][a->coluna] == NADA)
-                        {
-                                a->linha--;
-                        }
-                        else if (a->coluna>0 && \
-                        mascara[a->linha][a->coluna-1] == NADA)
-                        {
-                                a->coluna--;
-                        }
-                        else
-                        {
-                                a->linha = rand()%tam_mesa[nivel];
-                                a->coluna = rand()%tam_mesa[nivel];
-                        }
+                        a = j->alvos;
+                        j->alvos = a->prox;
                 }
                 else
                 {
-                        a->linha = rand()%tam_mesa[nivel];
-                        a->coluna = rand()%tam_mesa[nivel];
+                        a = new_alvo( rand()%tam_mesa[nivel], rand()%tam_mesa[nivel] );
                 }
 
                 fim = shot(matriz, mascara, a);
@@ -260,37 +377,102 @@ int play_auto (jogador j, mesa matriz, mesa mascara)
 
                 if (fim == 1)
                 {
-                        a->prox = j->certos;
-                        j->certos = a;
-                        j->acertou = 1;
+                        if (j->acertou)
+                        {
+                                if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
+                                mascara[a->linha+1][a->coluna] == DANO)
+                                {
+                                        p = new_alvo(a->linha-1, a->coluna);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                                if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
+                                mascara[a->linha-1][a->coluna] == DANO)
+                                {
+                                        p = new_alvo(a->linha+1, a->coluna);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                                if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
+                                mascara[a->linha][a->coluna+1] == DANO)
+                                {
+                                        p = new_alvo(a->linha, a->coluna-1);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                                if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
+                                mascara[a->linha][a->coluna-1] == DANO)
+                                {
+                                        p = new_alvo(a->linha, a->coluna+1);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                        }
+                        else
+                        {
+                                if (a->linha<(tam_mesa[nivel]-1) && \
+                                    mascara[a->linha+1][a->coluna] == NADA)
+                                {
+                                        p = new_alvo(a->linha+1, a->coluna);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                                if (a->coluna<(tam_mesa[nivel]-1) && \
+                                    mascara[a->linha][a->coluna+1] == NADA)
+                                {
+                                        p = new_alvo(a->linha, a->coluna+1);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                                if (a->linha>0 && \
+                                        mascara[a->linha-1][a->coluna] == NADA)
+                                {
+                                        p = new_alvo(a->linha-1, a->coluna);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                                if (a->coluna>0 && \
+                                        mascara[a->linha][a->coluna-1] == NADA)
+                                {
+                                        p = new_alvo(a->linha, a->coluna-1);
+                                        p->prox = j->alvos;
+                                        j->alvos = p;
+                                }
+                        }
                 }
-                else
-                if (fim == 0) {
-                        j->acertou = 0;
-                }
-        }
 
+                free(a);
+        }
+        sleep(2);
+
+        j->acertou = fim;
         return fim;
 }
 
 int play_man (jogador j, mesa matriz, mesa mascara)
 {
-        alvo a = new_alvo();
+        alvo a = new_alvo(0,0);
         int fim = -1;
+
+        printf("%s\n", j->nome);
 
         while (fim < 0)
         {
                 printf("Digite a linha que quer atacar:\n");
-                while ((a->linha=read_char('A','A'+tam_mesa[nivel])) < 0)
+                a->linha=read_char('A','A'+tam_mesa[nivel]);
+                while (a->linha < 0)
                 {
                         printf("Entrada invalida\nTente novamente:\n");
+                        a->linha=read_char('A','A'+tam_mesa[nivel]);
                 }
 
 
                 printf("Digite a coluna que quer atacar:\n");
-                while ((a->coluna=read_int(1, tam_mesa[nivel])) < 0)
+                a->coluna=read_int(1, tam_mesa[nivel]);
+                while (a->coluna < 0)
                 {
                         printf("Entrada invalida\nTente novamente:\n");
+                        a->coluna=read_int(1, tam_mesa[nivel]);
                 }
 
                 fim = shot(matriz, mascara, a);
@@ -303,8 +485,8 @@ int play_man (jogador j, mesa matriz, mesa mascara)
                 if (fim == 1)
                 {
                         printf("Belo tiro!\n");
-                        a->prox = j->certos;
-                        j->certos = a;
+                        a->prox = j->alvos;
+                        j->alvos = a;
                         j->acertou = 1;
                 }
                 else
@@ -313,57 +495,7 @@ int play_man (jogador j, mesa matriz, mesa mascara)
                         j->acertou = 0;
                 }
         }
+        sleep(2);
+
         return fim;
-}
-
-void game()
-{
-        int i, p=0;
-
-        jogador j1 = new_jogador("Jogador 1");
-        jogador j2 = new_jogador("Jogador 2");
-        mesa matriz_a;
-        mesa matriz_b;
-        mesa mascara_a;
-        mesa mascara_b;
-
-        do {
-                printf("Digite o nivel do jogo:\n");
-        } while ((nivel=read_char('1','3')) < 0);
-
-        set_size(tam_mesa[nivel]);
-
-        loop (i, QTD_BARCOS)
-        {
-                p += max_barcos[nivel][i]*(i+2);
-        }
-        j1->pecas = j2->pecas = p;
-
-        matriz_a  = new_mesa(AGUA);
-        matriz_b  = new_mesa(AGUA);
-        mascara_a = new_mesa(NADA);
-        mascara_b = new_mesa(NADA);
-
-        fill_auto(matriz_a);
-        fill_auto(matriz_b);
-
-        while (j1->pecas > 0 && j2->pecas > 0)
-        {
-                print_game(mascara_a, mascara_b);
-                j2->pecas -= play_man(j1, matriz_b, mascara_b);
-                printf("%d\n", j2->pecas);
-                sleep(1);
-                print_game(mascara_a, mascara_b);
-                j1->pecas -= play_auto(j2, matriz_a, mascara_a);
-                printf("%d\n", j1->pecas);
-                sleep(1);
-        }
-
-
-        free_jogador(j1);
-        free_jogador(j2);
-        free_board(matriz_a);
-        free_board(matriz_b);
-        free_board(mascara_a);
-        free_board(mascara_b);
 }

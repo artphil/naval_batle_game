@@ -1,3 +1,6 @@
+#ifndef _MESA_
+#define _MESA_
+
 #include "source.h"
 #include "target.h"
 
@@ -12,3 +15,5 @@ void free_board(mesa m);
 void print_board(mesa matriz);
 void print_game(mesa m_a, mesa m_b);
 int put_nav(mesa matriz, int barco, alvo a, int dir);
+
+#endif

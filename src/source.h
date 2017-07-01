@@ -14,6 +14,22 @@
 #include <ctype.h>
 
 
+/* Defincoes */
+// Definição do sistema operacional
+#if defined(__linux__) || defined(__linux)
+#define LINUX
+#endif
+
+#if defined(__APPLE__)
+#define OSX
+#endif
+
+#if defined(__WIN32__) || defined(__NT__)
+#define WINDOWS
+#endif
+
+char *limpa_tela;
+
 /* Definicao de ariaveis globais constantes */
 
 /*      Naves
@@ -27,11 +43,11 @@ Porta Aviões    6
 
 #define QTD_BARCOS 5
 #define NAVE  'H'
-#define AGUA  '0'
+#define AGUA  '.'
 #define SUJO  '@'
 #define DANO  '#'
-#define ERRO  'X'
-#define NADA  '.'
+#define ERRO  'o'
+#define NADA  '~'
 
 // Simplifacacao de funcoes
 #define loop(i,a) for(i=0;i<a;i++)

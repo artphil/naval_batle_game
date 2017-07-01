@@ -1,10 +1,10 @@
 #include "target.h"
 
-alvo new_alvo()
+alvo new_alvo(int l, int c)
 {
         alvo a = (alvo)malloc(sizeof(struct ALVO));
-        a->linha = 0;
-        a->coluna = 0;
+        a->linha = l;
+        a->coluna = c;
         a->prox = NULL;
 
         return a;

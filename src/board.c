@@ -33,8 +33,8 @@ void free_board(mesa matriz)
 void print_board(mesa matriz)
 {
         int i, j;
-        printf("    ");
-        loop(i,tam) printf("%c  ", ('M'+i));
+        printf("   ");
+        loop(i,tam) printf("%2d ", (1+i));
         printf("\n\n");
 
         loop(i,tam)

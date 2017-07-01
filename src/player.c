@@ -6,15 +6,24 @@ jogador new_jogador(char *nome)
         strcpy(j->nome, nome);
         j->acertou = 0;
         j->pecas = 0;
-        j->certos = NULL;
+        j->alvos = NULL;
 
         return j;
 }
 
 void free_jogador(jogador j)
 {
-        if (j->certos != NULL)
-                free_alvo(j->certos);
+        if (j->alvos != NULL)
+                free_alvo(j->alvos);
         free(j);
         j = NULL;
+}
+
+int jog_set_name(jogador j, char *nome)
+{
+        if (strcmp(nome, " ") == 0) return -1;
+        if (nome[0] =='\0') return -1;
+        if (nome[0] =='\n') return -1;
+        strcpy(j->nome, nome);
+        return 0;
 }
