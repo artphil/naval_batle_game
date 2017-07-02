@@ -1,16 +1,13 @@
-/* SOURCE */
-
 #include "game.h"
 
-
 /* Variaveis globais de apoio */
-
+// Quantidade maxima de cada barco por nivel de dificuldade
 const int max_barcos[3][QTD_BARCOS] = {
         {1,1,1,1,0},
         {2,2,2,1,1},
         {3,3,2,2,1}
 };
-
+// Nomes dos barcos
 const char *nome_barcos[QTD_BARCOS] = {
         "Corveta",
         "Submarino",
@@ -18,28 +15,32 @@ const char *nome_barcos[QTD_BARCOS] = {
         "Cruzador",
         "Porta Aviões"
 };
-
+// Tamanho dos tabuleiros por nivel de dificuldade
 const int tam_mesa[3] = {10,15,20};
-
-int pos_x,pos_y,nivel;
+// Define o nivel de dificuldade utilizado em varias partes do jogo
+int nivel;
+// Permite criar ponteiro para a funcao play_*()
 typedef int (*func_t)(jogador j, mesa matriz, mesa mascara);
 
 
-/* Lista de fucoes deste programa */
+/* Funcoes Internas */
+
+/* Funcoes Exportadas */
 void game();
+void print_game(mesa m_a, mesa m_b);
 int read_char (char i, char f);
 int read_int (int i, int f);
-void print_game(mesa m_a, mesa m_b);
 void to_fill(jogador j, mesa m);
 void fill_auto(mesa matriz);
 void fill_man(mesa matriz);
+int shot (mesa matriz, mesa mascara, alvo a);
 int play_auto (jogador j, mesa matriz, mesa mascara);
 int play_man (jogador j, mesa matriz, mesa mascara);
-int shot (mesa matriz, mesa mascara, alvo a);
 
 
 void game()
 {
+        // Definição de variaveis
         int i,
             p=0,
             jogadores;
@@ -53,6 +54,7 @@ void game()
         mesa mascara_a;
         mesa mascara_b;
 
+        // Inicio
         system(limpa_tela);
 
         printf("\

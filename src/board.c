@@ -1,5 +1,9 @@
 #include "board.h"
 
+/* Funcoes Internas */
+
+/* Funcoes Exportadas */
+
 static int tam = 10;
 
 void set_size(int t)

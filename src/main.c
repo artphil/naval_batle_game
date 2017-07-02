@@ -1,7 +1,7 @@
 #include "source.h"
 #include "game.h"
 
-// Identifica qual sistema esta sendo usado
+// Identifica qual sistema esta sendo usado (Linux/Windows/OSX)
 void sistema();
 
 int main ()
