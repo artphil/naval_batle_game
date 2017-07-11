@@ -403,8 +403,9 @@ int play_auto (jogador j, mesa matriz, mesa mascara)
 
                 if (fim == 1)
                 {
-                        if (j->acertou)
+                        if (j->acertou > 0)
                         {
+                                j->acertou >>= 1;
                                 if (a->linha>0 && a->linha<(tam_mesa[nivel]-1))
                                 {
                                         if(mascara[a->linha+1][a->coluna] == DANO)
@@ -437,34 +438,6 @@ int play_auto (jogador j, mesa matriz, mesa mascara)
                                                 j->alvos = p;
                                         }
                                 }
-                                // if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
-                                // mascara[a->linha+1][a->coluna] == DANO)
-                                // {
-                                //         p = new_alvo(a->linha-1, a->coluna);
-                                //         p->prox = j->alvos;
-                                //         j->alvos = p;
-                                // }
-                                // if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
-                                // mascara[a->linha-1][a->coluna] == DANO)
-                                // {
-                                //         p = new_alvo(a->linha+1, a->coluna);
-                                //         p->prox = j->alvos;
-                                //         j->alvos = p;
-                                // }
-                                // if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
-                                // mascara[a->linha][a->coluna+1] == DANO)
-                                // {
-                                //         p = new_alvo(a->linha, a->coluna-1);
-                                //         p->prox = j->alvos;
-                                //         j->alvos = p;
-                                // }
-                                // if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
-                                // mascara[a->linha][a->coluna-1] == DANO)
-                                // {
-                                //         p = new_alvo(a->linha, a->coluna+1);
-                                //         p->prox = j->alvos;
-                                //         j->alvos = p;
-                                // }
                         }
                         else
                         {
@@ -503,7 +476,7 @@ int play_auto (jogador j, mesa matriz, mesa mascara)
         }
         sleep(2);
 
-        j->acertou = fim;
+        j->acertou |= fim<<1;
         return fim;
 }
 
