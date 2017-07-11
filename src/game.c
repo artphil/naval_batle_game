@@ -43,8 +43,10 @@ void game()
         // Definição de variaveis
         int i,
             p=0,
-            jogadores;
-        char nome[20];
+            jogadores,
+            vazio;
+        char spaco[100],
+             nome[20];
         func_t joga_1, joga_2;
 
         jogador j1 = new_jogador("Jogador 1");
@@ -57,11 +59,11 @@ void game()
         // Inicio
         system(limpa_tela);
 
-        printf("\
+        printf("%s\
 ********************************************************************************\n\
-*                              BATAHA NAVAL                                    *\n\
+*                              %sBATAHA NAVAL%s                                    *\n\
 ********************************************************************************\n\
-        \n");
+        %s\n", YEL, RESET, YEL, RESET);
         do {
                 printf("Digite o numero de jogadores:  (1-2)\n");
         } while ((jogadores=read_char('0','2')) < 0);
@@ -76,19 +78,22 @@ void game()
         fgets(nome, 20, stdin);
         if (jogadores > 0)
         {
-                printf("Digite o nome do primeiro jogador, ou enter para defout:\n");
-                nome[0] = '\0';
+                printf("Digite o nome do primeiro jogador, ou enter para default:\n");
+                // nome[0] = '\0';
                 fgets(nome, 20, stdin);
-                nome[19] = '\0';
+                // nome[19] = '\0';
+                printf("oii %s\n", nome );
+                strcpy(nome, strtok(nome, "\n"));
                 jog_set_name(j1, nome);
         }
 
         if (jogadores > 1)
         {
-                printf("Digite o nome do segundo jogador, ou enter para defout:\n");
-                nome[0] = '\0';
+                printf("Digite o nome do segundo jogador, ou enter para default:\n");
+                // nome[0] = '\0';
                 fgets(nome, 20, stdin);
-                nome[19] = '\0';
+                // nome[19] = '\0';
+                strcpy(nome, strtok(nome, "\n"));
                 jog_set_name(j2, nome);
         }
 
@@ -129,14 +134,20 @@ void game()
 
         print_game(mascara_a, mascara_b);
 
+        memset(spaco, ' ', 100);
+        vazio = (3*tam_mesa[nivel]) - strlen(j1->nome) - 8;
+        spaco[vazio] = '\0';
+
         while (j1->pecas > 0 && j2->pecas > 0)
         {
                 j2->pecas -= joga_1(j1, matriz_b, mascara_b);
                 print_game(mascara_a, mascara_b);
-                printf("Restam %d pecas do %s\n", j2->pecas, j2->nome);
+                printf("Restam %d pecas do %s%sRestam %d pecas do %s\n", \
+                j1->pecas, j1->nome, spaco, j2->pecas, j2->nome);
                 j1->pecas -= joga_2(j2, matriz_a, mascara_a);
                 print_game(mascara_a, mascara_b);
-                printf("Restam %d pecas do %s\n", j1->pecas, j1->nome);
+                printf("Restam %d pecas do %s%sRestam %d pecas do %s\n", \
+                j1->pecas, j1->nome, spaco, j2->pecas, j2->nome);
         }
 
         strcpy(nome, (j1->pecas > 0) ? j1->nome : j2->nome);
@@ -157,19 +168,23 @@ void print_game(mesa m_a, mesa m_b)
 
         system(limpa_tela);
         // Titulo
+        printf(YEL);
         loop(i,tam_mesa[nivel]) printf("%s", "***");
         printf("***************");
         loop(i,tam_mesa[nivel]) printf("%s", "***");
 
         printf("\n*");
         loop(i,tam_mesa[nivel]) printf("%s", "   ");
+        printf(RESET);
         printf("BATALHA NAVAL");
+        printf(YEL);
         loop(i,tam_mesa[nivel]) printf("%s", "   ");
         printf("*\n");
 
         loop(i,tam_mesa[nivel]) printf("%s", "***");
         printf("***************");
         loop(i,tam_mesa[nivel]) printf("%s", "***");
+        printf(RESET);
         printf("\n\n");
 
         // Tabuleiros
@@ -184,12 +199,21 @@ void print_game(mesa m_a, mesa m_b)
                 printf("%c   ", ('A'+i));
                 loop(j,tam_mesa[nivel])
                 {
+                        if (m_a[i][j]==NADA) printf(BLU);
+                        else if (m_a[i][j]==ERRO) printf(RED);
+                        else if (m_a[i][j]==DANO) printf(GRN);
                         printf("%c  ", m_a[i][j]);
+                        printf(RESET);
                 }
                 printf("       ");
                 loop(j,tam_mesa[nivel])
                 {
+                        if (m_b[i][j]==NADA) printf(BLU);
+                        else if (m_b[i][j]==ERRO) printf(RED);
+                        else if (m_b[i][j]==DANO) printf(GRN);
                         printf("%c  ", m_b[i][j]);
+                        printf(RESET);
+
                 }
                 printf("   %c", ('A'+i));
                 printf("\n");
@@ -226,7 +250,7 @@ void to_fill(jogador j, mesa m)
 {
         int p;
 
-        printf("%s\nDeseja preencher automatico\n 1 - Sim\n 2 - Nao\n", j->nome);
+        printf("%s\nDeseja preenchimento automatico\n 1 - Sim\n 2 - Nao\n", j->nome);
         p=read_char('1','2');
         while (p < 0) ;
         {
@@ -381,34 +405,66 @@ int play_auto (jogador j, mesa matriz, mesa mascara)
                 {
                         if (j->acertou)
                         {
-                                if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
-                                mascara[a->linha+1][a->coluna] == DANO)
+                                if (a->linha>0 && a->linha<(tam_mesa[nivel]-1))
                                 {
-                                        p = new_alvo(a->linha-1, a->coluna);
-                                        p->prox = j->alvos;
-                                        j->alvos = p;
+                                        if(mascara[a->linha+1][a->coluna] == DANO)
+                                        {
+                                                p = new_alvo(a->linha-1, a->coluna);
+                                                p->prox = j->alvos;
+                                                j->alvos = p;
+                                        }
+                                        else
+                                        if (mascara[a->linha-1][a->coluna] == DANO)
+                                        {
+                                                p = new_alvo(a->linha+1, a->coluna);
+                                                p->prox = j->alvos;
+                                                j->alvos = p;
+                                        }
                                 }
-                                if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
-                                mascara[a->linha-1][a->coluna] == DANO)
+                                if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1))
                                 {
-                                        p = new_alvo(a->linha+1, a->coluna);
-                                        p->prox = j->alvos;
-                                        j->alvos = p;
+                                        if (mascara[a->linha][a->coluna+1] == DANO)
+                                        {
+                                                p = new_alvo(a->linha, a->coluna-1);
+                                                p->prox = j->alvos;
+                                                j->alvos = p;
+                                        }
+                                        else
+                                        if (mascara[a->linha][a->coluna-1] == DANO)
+                                        {
+                                                p = new_alvo(a->linha, a->coluna+1);
+                                                p->prox = j->alvos;
+                                                j->alvos = p;
+                                        }
                                 }
-                                if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
-                                mascara[a->linha][a->coluna+1] == DANO)
-                                {
-                                        p = new_alvo(a->linha, a->coluna-1);
-                                        p->prox = j->alvos;
-                                        j->alvos = p;
-                                }
-                                if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
-                                mascara[a->linha][a->coluna-1] == DANO)
-                                {
-                                        p = new_alvo(a->linha, a->coluna+1);
-                                        p->prox = j->alvos;
-                                        j->alvos = p;
-                                }
+                                // if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
+                                // mascara[a->linha+1][a->coluna] == DANO)
+                                // {
+                                //         p = new_alvo(a->linha-1, a->coluna);
+                                //         p->prox = j->alvos;
+                                //         j->alvos = p;
+                                // }
+                                // if (a->linha>0 && a->linha<(tam_mesa[nivel]-1) && \
+                                // mascara[a->linha-1][a->coluna] == DANO)
+                                // {
+                                //         p = new_alvo(a->linha+1, a->coluna);
+                                //         p->prox = j->alvos;
+                                //         j->alvos = p;
+                                // }
+                                // if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
+                                // mascara[a->linha][a->coluna+1] == DANO)
+                                // {
+                                //         p = new_alvo(a->linha, a->coluna-1);
+                                //         p->prox = j->alvos;
+                                //         j->alvos = p;
+                                // }
+                                // if (a->coluna>0 && a->coluna<(tam_mesa[nivel]-1) && \
+                                // mascara[a->linha][a->coluna-1] == DANO)
+                                // {
+                                //         p = new_alvo(a->linha, a->coluna+1);
+                                //         p->prox = j->alvos;
+                                //         j->alvos = p;
+                                // }
                         }
                         else
                         {

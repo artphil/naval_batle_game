@@ -13,7 +13,6 @@
 #include <time.h>
 #include <ctype.h>
 
-
 /* Defincoes */
 // Definição do sistema operacional
 #if defined(__linux__) || defined(__linux)
@@ -30,7 +29,7 @@
 
 char *limpa_tela;
 
-/* Definicao de ariaveis globais constantes */
+/* Definicao de variaveis globais constantes */
 
 /*      Naves
 Nome            Tamanho
@@ -42,12 +41,24 @@ Porta Aviões    6
 */
 
 #define QTD_BARCOS 5
+// Matriz
 #define NAVE  'H'
 #define AGUA  '.'
 #define SUJO  '@'
+// Mascara
 #define DANO  '#'
-#define ERRO  'o'
+#define ERRO  'x'
 #define NADA  '~'
+
+// Cores do terminal
+#define RED   "\x1B[31m"
+#define GRN   "\x1B[32m"
+#define YEL   "\x1B[33m"
+#define BLU   "\x1B[34m"
+#define MAG   "\x1B[35m"
+#define CYN   "\x1B[36m"
+#define WHT   "\x1B[37m"
+#define RESET "\x1B[0m"
 
 // Simplifacacao de funcoes
 #define loop(i,a) for(i=0;i<a;i++)
