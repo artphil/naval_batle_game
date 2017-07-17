@@ -27,7 +27,8 @@
 #define WINDOWS
 #endif
 
-char *limpa_tela;
+char   *limpa_tela;
+int     tam_tabuleiro;
 
 /* Definicao de variaveis globais constantes */
 
@@ -53,7 +54,7 @@ Porta Aviões    6
 // Cores do terminal
 #define RED   "\x1B[31m"
 #define GRN   "\x1B[32m"
-#define YEL   "\x1B[33m"
+#define YLW   "\x1B[33m"
 #define BLU   "\x1B[34m"
 #define MAG   "\x1B[35m"
 #define CYN   "\x1B[36m"

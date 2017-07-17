@@ -9,7 +9,7 @@ struct ALVO
 {
         int   linha;
         int   coluna;
-        alvo  prox;    // Ponteiro para lista
+        alvo  prox;    // Ponteiro para pilha
 };
 
 alvo new_alvo(int l, int c);

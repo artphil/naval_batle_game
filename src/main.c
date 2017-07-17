@@ -13,9 +13,9 @@ int main ()
 
         do {
                 game();
-                printf("Deseja jogar novamente? (y-n)\n");
+                printf("Deseja jogar novamente? (s/n)\n");
                 scanf(" %c", &continuar);
-        } while (continuar == 'y');
+        } while (continuar == 's');
 
         return 0;
 }
