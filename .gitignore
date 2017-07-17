@@ -1,0 +1,7 @@
+# Arquivos a serem ignoraddos
+
+# Objetos
+*.o
+
+# Executaveis
+*.exe

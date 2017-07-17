@@ -5,18 +5,20 @@
 * [Objetiivo](#objetivos)
 * [Batalha Naval](#batalha-naval)
 * [Desenvolvimento](#desenvolvimento)
-* [Organização](#organiza)
+* [Organização](#organização)
 * [Arquivos](#arquivos)
-        * [main](#main)
-        * [game](#game)
-        * [player](#player)
-        * [board](#board)
-        * [target](#target)
-        * [source](#source)
-        * [makefile](#makefile)
+ * [main](#main)
+ * [game](#game)
+ * [player](#player)
+ * [board](#board)
+ * [target](#target)
+ * [source](#source)
+ * [makefile](#makefile)
 
+## Objetivo
+O intuito  deste projeto é praticar os conceitos aprendidos durante curso de Sistemas de Informação da [UFMG](https://www.ufmg.br/).
 
-##Batalha Naval
+## Batalha Naval
 O jogo Batalha Naval consiste em dois tabuleiros e varios barcos de tamanhos variados.</br>
 É jogado por dois jogadores que possuem, cada, um tabuleiro e alguns barcos (cada
 jogador possue a mesma quantidade e tipo barcos).</br>
@@ -32,23 +34,28 @@ Programa desenvolvido na linguagem `C`.</br>
 Compilação pelo `GCC` automizado por `makefile`.</br>
 
 ## Organização
-Sitema de modularização por separação de TAD's em arquivos (`.c .h`).</br>
-Organização do código atavez de principios do `Newspaper order`.</br>
-Nomes de funções e arquivos em inglês, TAD's e variaveis em português.</br>
+Sitema de modularização por separação de `TAD's` em `arquivos` (`.c .h`).</br>
+Organização do código ataves de principios do `Newspaper order`.</br>
+Nomes de `funções` e `arquivos` em inglês, `TAD's` e `variaveis` em português.</br>
 Padronização de nomes em `snake case` e chaveamento de funações por `brace style K&R` (Kernighan & Ritchie)
 
 ## Arquivos
 
 ### main
-(.c)
+[main.c](src/main.c)
 ### game
-(.c .h)
+[game.c](src/game.c)</br>
+[game.h](src/game.h)
 ### player
-(.c .h)
+[player.c](src/player.c)</br>
+[player.h](src/player.h)
 ### board
-(.c .h)
+[board.c](src/board.c)</br>
+[board.h](src/board.h)
 ### target
-(.c .h)
+[target.c](src/target.c)</br>
+[target.h](src/target.h)
 ### source
-(.h)
+[source.h](src/source.h)
 ### makefile
+[makefile](makefile)
