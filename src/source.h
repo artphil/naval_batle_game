@@ -61,6 +61,10 @@ Porta Aviões    6
 #define WHT   "\x1B[37m"
 #define RESET "\x1B[0m"
 
+// Numero mensagens
+#define QTD_MSGS_ACERTOU 4
+#define QTD_MSGS_ERROU 4
+
 // Simplifacacao de funcoes
 #define loop(i,a) for(i=0;i<a;i++)
 

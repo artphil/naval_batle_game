@@ -15,6 +15,23 @@ const char *nome_barcos[QTD_BARCOS] = {
         "Cruzador",
         "Porta Aviões"
 };
+
+// Mensagens de parabenização pelo tiro
+const char *mensagens_acertou_tiro[QTD_MSGS_ACERTOU] = {
+    "Belo tiro!",
+    "Na mosca!",
+    "Acertou!",
+    "Cabum!"
+};
+
+// Mensagens de parabenização pelo tiro
+const char *mensagens_errou_tiro[QTD_MSGS_ERROU] = {
+    "Água!",
+    "Errou!!",
+    "Splash!",
+    "Assustou os peixes..."
+};
+
 // Define o nivel de dificuldade utilizado em varias partes do jogo
 int nivel;
 // Permite criar ponteiro para a funcao play_*()
@@ -22,6 +39,8 @@ typedef int (*func_t)(jogador j, mesa matriz, mesa mascara);
 
 
 /* Funcoes Internas */
+static void congratulation_message();
+static void fail_message();
 
 /* Funcoes Exportadas */
 void game();
@@ -486,23 +505,31 @@ int play_man (jogador j, mesa matriz, mesa mascara)
 
                 if (fim == -1)
                 {
-                        printf("Voce ja atirou aqui.\nTente denovo:\n");
+                        printf("Voce ja atirou aqui.\nTente novamente:\n");
                 }
                 else
                 if (fim == 1)
                 {
-                        printf("Belo tiro!\n");
+                        congratulation_message();
                         a->prox = j->alvos;
                         j->alvos = a;
                         j->num_alvos = 1;
                 }
                 else
                 {
-                        printf("Voce errou.\n");
+                        fail_message();
                         j->num_alvos = 0;
                 }
         }
         sleep(2);
 
         return fim;
+}
+
+static void congratulation_message() {
+    printf("%s\n", mensagens_acertou_tiro[rand()%QTD_MSGS_ACERTOU]);
+}
+
+static void fail_message() {
+    printf("%s\n", mensagens_errou_tiro[rand()%QTD_MSGS_ERROU]);
 }
