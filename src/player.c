@@ -40,7 +40,7 @@ alvo get_alvo (jogador j)
                 j->alvos = a->prox;
         }
         else
-                a = new_alvo( rand()%tam_tabuleiro, rand()%tam_tabuleiro );
+                a = new_alvo(rand()%tam_tabuleiro, rand()%tam_tabuleiro);
 
         return a;
 }
