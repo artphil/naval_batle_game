@@ -1,6 +1,6 @@
 /*
         Implementacao em C do jogo Batalha Naval
-        Codigo para fins academicos
+        ArtPhil © 2017
 */
 #ifndef _GLOBAL_
 #define _GLOBAL_
@@ -27,11 +27,6 @@
 #define WINDOWS
 #endif
 
-char   *limpa_tela;
-int     tam_tabuleiro;
-
-/* Definicao de variaveis globais constantes */
-
 /*      Naves
 Nome            Tamanho
 Corveta         2
@@ -41,11 +36,22 @@ Cruzador        5
 Porta Aviões    6
 */
 
+// Definicao de variaveis globais
+char   *limpa_tela;
+int     tam_tabuleiro;
+
+// Numero tipo de barcos
 #define QTD_BARCOS 5
+
+// Numero mensagens
+#define QTD_MSGS_ACERTOU 4
+#define QTD_MSGS_ERROU 4
+
 // Matriz
 #define NAVE  'H'
 #define AGUA  '.'
 #define SUJO  '@'
+
 // Mascara
 #define DANO  '#'
 #define ERRO  'x'
@@ -60,10 +66,6 @@ Porta Aviões    6
 #define CYN   "\x1B[36m"
 #define WHT   "\x1B[37m"
 #define RESET "\x1B[0m"
-
-// Numero mensagens
-#define QTD_MSGS_ACERTOU 4
-#define QTD_MSGS_ERROU 4
 
 // Simplifacacao de funcoes
 #define loop(i,a) for(i=0;i<a;i++)

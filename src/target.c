@@ -1,3 +1,7 @@
+/*
+        Implementacao em C do jogo Batalha Naval
+        ArtPhil © 2017
+*/
 #include "target.h"
 
 alvo new_alvo(int l, int c)

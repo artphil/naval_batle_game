@@ -1,3 +1,7 @@
+/*
+        Implementacao em C do jogo Batalha Naval
+        ArtPhil © 2017
+*/
 #include "game.h"
 
 /* Variaveis globais de apoio */
@@ -16,7 +20,7 @@ const char *nome_barcos[QTD_BARCOS] = {
         "Porta Aviões"
 };
 
-// Mensagens de parabenização pelo tiro
+// Mensagens de parabenizacao pelo tiro
 const char *mensagens_acertou_tiro[QTD_MSGS_ACERTOU] = {
     "Belo tiro!",
     "Na mosca!",
@@ -24,7 +28,7 @@ const char *mensagens_acertou_tiro[QTD_MSGS_ACERTOU] = {
     "Cabum!"
 };
 
-// Mensagens de parabenização pelo tiro
+// Mensagens de parabenizacao pelo tiro
 const char *mensagens_errou_tiro[QTD_MSGS_ERROU] = {
     "Água!",
     "Errou!!",
@@ -34,25 +38,39 @@ const char *mensagens_errou_tiro[QTD_MSGS_ERROU] = {
 
 // Define o nivel de dificuldade utilizado em varias partes do jogo
 int nivel;
+
 // Permite criar ponteiro para a funcao play_*()
 typedef int (*func_t)(jogador j, mesa matriz, mesa mascara);
 
-
 /* Funcoes Internas */
+
+// Le um caractere da tela de forma de char
+static int read_char (char i, char f);
+
+// Le um caractere da tela de forma de int
+static int read_int (int i, int f);
+
+// Preenchimento automatico de barcos
+static void fill_auto(mesa matriz);
+
+// Preenchimento manual de barcos
+static void fill_man(mesa matriz);
+
+// Define o tipo de preenchimento do tabuleiro
+static void to_fill(jogador j, mesa m);
+
+// Insere um palpite no tabuleiro do inimigo
+static int shot (mesa matriz, mesa mascara, alvo a);
+
+// Jogo automatico
+static int play_auto (jogador j, mesa matriz, mesa mascara);
+
+// Jogo manual
+static int play_man (jogador j, mesa matriz, mesa mascara);
+
+// Imprime a mensagens de parabenizacao pelo tiro
 static void congratulation_message();
 static void fail_message();
-
-/* Funcoes Exportadas */
-void game();
-void print_game(mesa m_a, mesa m_b);
-int read_char (char i, char f);
-int read_int (int i, int f);
-void to_fill(jogador j, mesa m);
-void fill_auto(mesa matriz);
-void fill_man(mesa matriz);
-int shot (mesa matriz, mesa mascara, alvo a);
-int play_auto (jogador j, mesa matriz, mesa mascara);
-int play_man (jogador j, mesa matriz, mesa mascara);
 
 
 void game()
@@ -178,66 +196,7 @@ void game()
         free_board(mascara_b);
 }
 
-void print_game(mesa m_a, mesa m_b)
-{
-        int i, j;
-
-        system(limpa_tela);
-        // Titulo
-        printf(YLW);
-        loop(i,tam_tabuleiro) printf("%s", "***");
-        printf("***************");
-        loop(i,tam_tabuleiro) printf("%s", "***");
-
-        printf("\n*");
-        loop(i,tam_tabuleiro) printf("%s", "   ");
-        printf(RESET);
-        printf("BATALHA NAVAL");
-        printf(YLW);
-        loop(i,tam_tabuleiro) printf("%s", "   ");
-        printf("*\n");
-
-        loop(i,tam_tabuleiro) printf("%s", "***");
-        printf("***************");
-        loop(i,tam_tabuleiro) printf("%s", "***");
-        printf(RESET);
-        printf("\n\n");
-
-        // Tabuleiros
-        printf("   ");
-        loop(i,tam_tabuleiro) printf("%2d ", (1+i));
-        printf("       ");
-        loop(i,tam_tabuleiro) printf("%2d ", (1+i));
-        printf("\n\n");
-
-        loop(i,tam_tabuleiro)
-        {
-                printf("%c   ", ('A'+i));
-                loop(j,tam_tabuleiro)
-                {
-                        if (m_a[i][j]==NADA) printf(BLU);
-                        else if (m_a[i][j]==ERRO) printf(RED);
-                        else if (m_a[i][j]==DANO) printf(GRN);
-                        printf("%c  ", m_a[i][j]);
-                        printf(RESET);
-                }
-                printf("       ");
-                loop(j,tam_tabuleiro)
-                {
-                        if (m_b[i][j]==NADA) printf(BLU);
-                        else if (m_b[i][j]==ERRO) printf(RED);
-                        else if (m_b[i][j]==DANO) printf(GRN);
-                        printf("%c  ", m_b[i][j]);
-                        printf(RESET);
-
-                }
-                printf("   %c", ('A'+i));
-                printf("\n");
-        }
-        printf("\n");
-}
-
-int read_char (char i, char f)
+static int read_char (char i, char f)
 {
         char c;
 
@@ -250,7 +209,7 @@ int read_char (char i, char f)
         return (int) c - i;
 }
 
-int read_int (int i, int f)
+static int read_int (int i, int f)
 {
         int c;
 
@@ -262,7 +221,7 @@ int read_int (int i, int f)
         return c - i;
 }
 
-void to_fill(jogador j, mesa m)
+static void to_fill(jogador j, mesa m)
 {
         int p;
 
@@ -278,7 +237,7 @@ void to_fill(jogador j, mesa m)
         else fill_auto(m);
 }
 
-void fill_auto(mesa matriz)
+static void fill_auto(mesa matriz)
 {
         int i;
         alvo a = new_alvo(0,0);
@@ -307,7 +266,7 @@ void fill_auto(mesa matriz)
         }
 }
 
-void fill_man(mesa matriz)
+static void fill_man(mesa matriz)
 {
         int i;
         alvo a = new_alvo(0,0);
@@ -375,7 +334,7 @@ void fill_man(mesa matriz)
 
 }
 
-int shot (mesa matriz, mesa mascara, alvo a)
+static int shot (mesa matriz, mesa mascara, alvo a)
 {
         if (matriz[a->linha][a->coluna] == AGUA)
         {
@@ -397,7 +356,7 @@ int shot (mesa matriz, mesa mascara, alvo a)
 }
 
 
-int play_auto (jogador j, mesa matriz, mesa mascara)
+static int play_auto (jogador j, mesa matriz, mesa mascara)
 {
         alvo    a;
         int     fim = -1,
@@ -475,7 +434,7 @@ int play_auto (jogador j, mesa matriz, mesa mascara)
         return fim;
 }
 
-int play_man (jogador j, mesa matriz, mesa mascara)
+static int play_man (jogador j, mesa matriz, mesa mascara)
 {
         alvo a = new_alvo(0,0);
         int fim = -1;

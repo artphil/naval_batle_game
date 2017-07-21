@@ -1,3 +1,7 @@
+/*
+        Implementacao em C do jogo Batalha Naval
+        ArtPhil © 2017
+*/
 #include "player.h"
 
 jogador new_jogador(char *nome)

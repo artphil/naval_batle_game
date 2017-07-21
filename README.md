@@ -1,5 +1,5 @@
 # naval_batle_game
-© _ArtPhil_ 2017
+_ArtPhil_ © 2017
 
 # Jogo Batalha Naval desenvolvido para fins acadêmicos
 Arthur Phillip Silva ([github](https://artphil7.github.io/)), </br>

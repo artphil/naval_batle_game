@@ -1,3 +1,7 @@
+/*
+        Implementacao em C do jogo Batalha Naval
+        ArtPhil © 2017
+*/
 #ifndef _MESA_
 #define _MESA_
 
@@ -6,14 +10,24 @@
 
 typedef char** mesa;
 
+/* Funcoes exportadas */
+
+// Define tamanho do tabuleiro
 void set_size(int t);
 
+// Cria novo tabuleiro
 mesa new_mesa(char a);
-//
+
+// Libera Memoria
 void free_board(mesa m);
-// Imprime uma tabela com a borda alfabetica
+
+// Imprime o tabuleiro com a borda alfanumerica
 void print_board(mesa matriz);
+
+// Imprime os dois tabuleiros com borda alfanumerica
 void print_game(mesa m_a, mesa m_b);
+
+// Insere um barco no tabuleiro
 int put_nav(mesa matriz, int barco, alvo a, int dir);
 
 #endif
