@@ -40,6 +40,9 @@ Porta Aviões    6
 char   *limpa_tela;
 int     tam_tabuleiro;
 
+// Definicao de funcoes globais
+void limpa_stdin();
+
 // Numero tipo de barcos
 #define QTD_BARCOS 5
 

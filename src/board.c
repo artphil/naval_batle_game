@@ -87,27 +87,6 @@ void print_game(mesa m_a, mesa m_b)
 {
         int i, j;
 
-        system(limpa_tela);
-        // Titulo
-        printf(YLW);
-        loop(i,tam_tabuleiro) printf("%s", "***");
-        printf("***************");
-        loop(i,tam_tabuleiro) printf("%s", "***");
-
-        printf("\n*");
-        loop(i,tam_tabuleiro) printf("%s", "   ");
-        printf(RESET);
-        printf("BATALHA NAVAL");
-        printf(YLW);
-        loop(i,tam_tabuleiro) printf("%s", "   ");
-        printf("*\n");
-
-        loop(i,tam_tabuleiro) printf("%s", "***");
-        printf("***************");
-        loop(i,tam_tabuleiro) printf("%s", "***");
-        printf(RESET);
-        printf("\n\n");
-
         // Tabuleiros
         printf("   ");
         loop(i,tam_tabuleiro) printf("%2d ", (1+i));

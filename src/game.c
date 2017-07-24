@@ -11,30 +11,6 @@ const int max_barcos[3][QTD_BARCOS] = {
         {2,2,2,1,1},
         {3,3,2,2,1}
 };
-// Nomes dos barcos
-const char *nome_barcos[QTD_BARCOS] = {
-        "Corveta",
-        "Submarino",
-        "Fragata",
-        "Cruzador",
-        "Porta Aviões"
-};
-
-// Mensagens de parabenizacao pelo tiro
-const char *mensagens_acertou_tiro[QTD_MSGS_ACERTOU] = {
-    "Belo tiro!",
-    "Na mosca!",
-    "Acertou!",
-    "Cabum!"
-};
-
-// Mensagens de parabenizacao pelo tiro
-const char *mensagens_errou_tiro[QTD_MSGS_ERROU] = {
-    "Água!",
-    "Errou!!",
-    "Splash!",
-    "Assustou os peixes..."
-};
 
 // Define o nivel de dificuldade utilizado em varias partes do jogo
 int nivel;
@@ -44,11 +20,14 @@ typedef int (*func_t)(jogador j, mesa matriz, mesa mascara);
 
 /* Funcoes Internas */
 
-// Le um caractere da tela de forma de char
-static int read_char (char i, char f);
+// Le uma sequencia de caracteres da tela
+static char* read_string (int tam);
 
-// Le um caractere da tela de forma de int
-static int read_int (int i, int f);
+// Le um caractere da tela em forma de char
+static int read_char (char inicio, char fim);
+
+// Le um caractere da tela em forma de int
+static int read_int (int inicio, int fim);
 
 // Preenchimento automatico de barcos
 static void fill_auto(mesa matriz);
@@ -68,16 +47,12 @@ static int play_auto (jogador j, mesa matriz, mesa mascara);
 // Jogo manual
 static int play_man (jogador j, mesa matriz, mesa mascara);
 
-// Imprime a mensagens de parabenizacao pelo tiro
-static void congratulation_message();
-static void fail_message();
-
 
 void game()
 {
         // Definição de variaveis
         int i,
-            p=0,
+            p = 0,
             jogadores,
             vazio;
         char spaco[100],
@@ -92,13 +67,8 @@ void game()
         mesa mascara_b;
 
         // Inicio
-        system(limpa_tela);
+        print_banner(10);
 
-        printf("%s\
-********************************************************************************\n\
-*                              %sBATAHA NAVAL%s                                    *\n\
-********************************************************************************\n\
-        %s\n", YLW, RESET, YLW, RESET);
         do {
                 printf("Digite o numero de jogadores:  (1-2)\n");
         } while ((jogadores=read_char('0','2')) < 0);
@@ -121,25 +91,18 @@ void game()
         }
         j1->pecas = j2->pecas = p;
 
-        fgets(nome, 20, stdin);
         if (jogadores > 0)
         {
+                print_banner(10);
                 printf("Digite o nome do primeiro jogador, ou enter para default:\n");
-                fgets(nome, 20, stdin);
-                if (strlen(nome) > 1){
-                        strcpy(nome, strtok(nome, "\n"));
-                        jog_set_name(j1, nome);
-                }
+                jog_set_name(j1, read_string(20));
         }
 
         if (jogadores > 1)
         {
+                print_banner(10);
                 printf("Digite o nome do segundo jogador, ou enter para default:\n");
-                fgets(nome, 20, stdin);
-                if (strlen(nome) > 1){
-                        strcpy(nome, strtok(nome, "\n"));
-                        jog_set_name(j2, nome);
-                }
+                jog_set_name(j2, read_string(20));
         }
 
         joga_1 = (func_t) *play_auto;
@@ -147,7 +110,9 @@ void game()
 
         if (jogadores > 1)
         {
+                print_banner(10);
                 to_fill(j1, matriz_a);
+                print_banner(10);
                 to_fill(j2, matriz_b);
                 joga_1 = (func_t) *play_man;
                 joga_2 = (func_t) *play_man;
@@ -155,6 +120,7 @@ void game()
         else
         if (jogadores > 0)
         {
+                print_banner(10);
                 to_fill(j1, matriz_a);
                 fill_auto(matriz_b);
                 joga_1 = (func_t) *play_man;
@@ -166,6 +132,7 @@ void game()
         }
 
 
+        print_banner(tam_tabuleiro);
         print_game(mascara_a, mascara_b);
 
         memset(spaco, ' ', 100);
@@ -175,10 +142,12 @@ void game()
         while (j1->pecas > 0 && j2->pecas > 0)
         {
                 j2->pecas -= joga_1(j1, matriz_b, mascara_b);
+                print_banner(tam_tabuleiro);
                 print_game(mascara_a, mascara_b);
                 printf("Restam %d pecas do %s%sRestam %d pecas do %s\n", \
                 j1->pecas, j1->nome, spaco, j2->pecas, j2->nome);
                 j1->pecas -= joga_2(j2, matriz_a, mascara_a);
+                print_banner(tam_tabuleiro);
                 print_game(mascara_a, mascara_b);
                 printf("Restam %d pecas do %s%sRestam %d pecas do %s\n", \
                 j1->pecas, j1->nome, spaco, j2->pecas, j2->nome);
@@ -196,29 +165,53 @@ void game()
         free_board(mascara_b);
 }
 
-static int read_char (char i, char f)
+static char* read_string (int tam)
+{
+        char   *texto,
+                buffer[100];
+        int     letra = 0;
+
+        texto = (char*) malloc (tam*sizeof(char));
+        memset (texto, '\0', tam);
+
+        fgets (buffer, 100, stdin);
+        limpa_stdin();
+
+        while (buffer[letra] != '\n' && letra < tam)
+        {
+                texto[letra] = buffer[letra];
+                letra++;
+        }
+
+        return texto;
+}
+
+static int read_char (char inicio, char fim)
 {
         char c;
 
         scanf(" %c", &c);
+        limpa_stdin();
+
         c = toupper(c);
 
-        if (c < i) return -1;
-        if (c > f) return -1;
+        if (c < inicio) return -1;
+        if (c > fim) return -1;
 
-        return (int) c - i;
+        return (int) c - inicio;
 }
 
-static int read_int (int i, int f)
+static int read_int (int inicio, int fim)
 {
         int c;
 
         scanf(" %d", &c);
+        limpa_stdin();
 
-        if (c < i) return -1;
-        if (c > f) return -1;
+        if (c < inicio) return -1;
+        if (c > fim) return -1;
 
-        return c - i;
+        return c - inicio;
 }
 
 static void to_fill(jogador j, mesa m)
@@ -226,14 +219,13 @@ static void to_fill(jogador j, mesa m)
         int p;
 
         printf("%s\nDeseja preenchimento automatico\n 1 - Sim\n 2 - Nao\n", j->nome);
-        p=read_char('1','2');
-        while (p < 0) ;
+
+        while ((p = read_char('1','2')) < 0) ;
         {
                 printf("Valor invalido\n");
-                p=read_char('1','2');
         }
 
-        if (p) fill_man(m);
+        if (p == 1) fill_man(m);
         else fill_auto(m);
 }
 
@@ -252,10 +244,9 @@ static void fill_auto(mesa matriz)
         }
         while (total > 0)
         {
-                print_board(matriz);
                 a->linha = rand()%tam_tabuleiro;
                 a->coluna = rand()%tam_tabuleiro;
-                printf("%s %d t= %d\n", nome_barcos[barco], limite[barco], total);
+
                 if (limite[barco] == 0)
                         barco--;
                 else if ((put_nav(matriz, barco+2, a,(rand()%2))) == 0)
@@ -282,13 +273,14 @@ static void fill_man(mesa matriz)
 
         while (total > 0)
         {
+                print_banner(10);
                 print_board(matriz);
 
                 printf("Digite o numero barco:\n");
                 loop(i, QTD_BARCOS)
                 {
                         if (limite[i] > 0)
-                                printf("%d - %12s ( %d )\n", i+1, nome_barcos[i], limite[i]);
+                                printf(" %d - %-12s ( %d )\n", i+1, txt_barcos.txt[i], limite[i]);
                 }
 
                 while ((barco=read_char('1','0'+QTD_BARCOS)) < 0 || \
@@ -296,24 +288,24 @@ static void fill_man(mesa matriz)
                 {
                         if (limite[barco] == 0)
                                 printf("Todos os %s ja foram usados.\nTente novamente:\n", \
-                                       nome_barcos[barco]);
+                                       txt_barcos.txt[barco]);
                         else printf("Entrada invalida\nTente novamente:\n");
                 }
 
-                printf("Digite a linha do %s:\n", nome_barcos[barco]);
+                printf("Digite a linha do %s:\n", txt_barcos.txt[barco]);
                 while ((a->linha=read_char('A','A'+tam_tabuleiro)) < 0)
                 {
                         printf("Entrada invalida\nTente novamente:\n");
                 }
 
-                printf("Digite a coluna do %s:\n", nome_barcos[barco]);
+                printf("Digite a coluna do %s:\n", txt_barcos.txt[barco]);
                 while ((a->coluna=read_int(1,tam_tabuleiro)) < 0)
                 {
                         printf("Entrada invalida\nTente novamente:\n");
                 }
 
                 printf("Digite a orientacao do %s:\n 1 - Horizontal.\n 2 - Vertical.\n", \
-                       nome_barcos[barco]);
+                       txt_barcos.txt[barco]);
                 while ((direcao=read_char('1','2')) < 0)
                 {
                         printf("Entrada invalida\nTente novamente:\n");
@@ -326,10 +318,10 @@ static void fill_man(mesa matriz)
                 }
                 else if (i == 1)
                         printf("O %s ultrapassa os limites do mapa\nTente novamente:\n", \
-                               nome_barcos[barco]);
+                               txt_barcos.txt[barco]);
                 else if (i == 2)
                         printf("O %s sobrepoe aliado\nTente novamente:\n", \
-                               nome_barcos[barco]);
+                               txt_barcos.txt[barco]);
         }
 
 }
@@ -483,12 +475,4 @@ static int play_man (jogador j, mesa matriz, mesa mascara)
         sleep(2);
 
         return fim;
-}
-
-static void congratulation_message() {
-    printf("%s\n", mensagens_acertou_tiro[rand()%QTD_MSGS_ACERTOU]);
-}
-
-static void fail_message() {
-    printf("%s\n", mensagens_errou_tiro[rand()%QTD_MSGS_ERROU]);
 }

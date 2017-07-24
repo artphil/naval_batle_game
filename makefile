@@ -19,7 +19,7 @@ CC = gcc
 CFLAGS = -Wall
 P_SRC = src/
 P_OBJ = obj/
-SRC = game.c player.c board.c target.c main.c
+SRC = game.c player.c board.c target.c messages.c main.c
 OBJ= $(SRC:.c=.o)
 EXEC = nav_bat.exe
 
@@ -29,7 +29,7 @@ all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	@echo "Vendendo ingressos"
-	@$(CC) -o $(EXEC) $(P_OBJ)main.o $(P_OBJ)game.o $(P_OBJ)player.o $(P_OBJ)board.o $(P_OBJ)target.o
+	@$(CC) -o $(EXEC) $(P_OBJ)main.o $(P_OBJ)game.o $(P_OBJ)player.o $(P_OBJ)board.o $(P_OBJ)target.o $(P_OBJ)messages.o
 	@echo "OK. pode comecar o jogo"
 
 target.o: $(P_SRC)target.c
@@ -48,6 +48,11 @@ game.o: $(P_SRC)game.c
 	@echo "Distribuindo pecas"
 	@$(CC) -c $(P_SRC)game.c -o $(P_OBJ)game.o $(CFLAGS)
 
+messages.o: $(P_SRC)messages.c
+	@echo "Contratando narradores"
+	@$(CC) -c $(P_SRC)messages.c -o $(P_OBJ)messages.o $(CFLAGS)
+
+
 main.o: $(P_SRC)main.c
 	@echo "Conferindo o sistema"
 	@$(CC) -c $(P_SRC)main.c -o $(P_OBJ)main.o $(CFLAGS)
@@ -56,4 +61,4 @@ clear:
 	@echo "Apagando rastros"
 	rm $(P_OBJ)*.o
 	rm $(EXEC)
-	@echo "Pronto"
+	@echo "Pronto, mas nao conte para ninguem!"

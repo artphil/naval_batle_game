@@ -25,7 +25,6 @@ void free_jogador(jogador j)
 
 int jog_set_name(jogador j, char *nome)
 {
-        printf("oi\n");
         if (nome == NULL) return -1;
         if (strlen(nome) == 0) return -1;
         if (strcmp(nome, " ") == 0) return -1;

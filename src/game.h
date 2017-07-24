@@ -9,10 +9,13 @@
 #include "player.h"
 #include "target.h"
 #include "board.h"
+#include "messages.h"
 
 /* Funcoes exportadas */
 
 // Faz tosas as tarefas referentes a batalha
 void game();
+
+void limpa_stdin();
 
 #endif
