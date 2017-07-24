@@ -3,8 +3,10 @@ Batalha Naval
 BATALHA NAVAL
 Jogador 1
 Jogador 2
-1
+3
 Deseja jogar novamente? (s/n)
+Digite o nome do primeiro jogador, ou ENTER para default:
+Digite o nome do segundo jogador, ou ENTER para default:
 2
 Tente novamente.
 Valor invalido.

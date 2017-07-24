@@ -94,14 +94,14 @@ void game()
         if (jogadores > 0)
         {
                 print_banner(10);
-                printf("Digite o nome do primeiro jogador, ou enter para default:\n");
+                printf("%s\n", txt_perguntas.txt[1]);
                 jog_set_name(j1, read_string(20));
         }
 
         if (jogadores > 1)
         {
                 print_banner(10);
-                printf("Digite o nome do segundo jogador, ou enter para default:\n");
+                printf("%s\n", txt_perguntas.txt[2]);
                 jog_set_name(j2, read_string(20));
         }
 
@@ -134,6 +134,9 @@ void game()
 
         print_banner(tam_tabuleiro);
         print_game(mascara_a, mascara_b);
+        printf("%s %d %s %s%s%s %d %s %s\n", \
+        txt_default.txt[4], j1->pecas, txt_default.txt[5], j1->nome, spaco, \
+        txt_default.txt[4], j2->pecas, txt_default.txt[5], j2->nome);
 
         memset(spaco, ' ', 100);
         vazio = (3*tam_tabuleiro) - strlen(j1->nome) - 8;
@@ -144,14 +147,17 @@ void game()
                 j2->pecas -= joga_1(j1, matriz_b, mascara_b);
                 print_banner(tam_tabuleiro);
                 print_game(mascara_a, mascara_b);
-                printf("Restam %d pecas do %s%sRestam %d pecas do %s\n", \
-                j1->pecas, j1->nome, spaco, j2->pecas, j2->nome);
+                printf("%s %d %s %s%s%s %d %s %s\n", \
+                txt_default.txt[4], j1->pecas, txt_default.txt[5], j1->nome, spaco, \
+                txt_default.txt[4], j2->pecas, txt_default.txt[4], j2->nome);
+
                 j1->pecas -= joga_2(j2, matriz_a, mascara_a);
                 print_banner(tam_tabuleiro);
                 print_game(mascara_a, mascara_b);
-                printf("Restam %d pecas do %s%sRestam %d pecas do %s\n", \
-                j1->pecas, j1->nome, spaco, j2->pecas, j2->nome);
-        }
+                printf("%s %d %s %s%s%s %d %s %s\n", \
+                txt_default.txt[4], j1->pecas, txt_default.txt[5], j1->nome, spaco, \
+                txt_default.txt[4], j2->pecas, txt_default.txt[4], j2->nome);
+                }
 
         strcpy(nome, (j1->pecas > 0) ? j1->nome : j2->nome);
 
