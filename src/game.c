@@ -59,8 +59,8 @@ void game()
              nome[20];
         func_t joga_1, joga_2;
 
-        jogador j1 = new_jogador("Jogador 1");
-        jogador j2 = new_jogador("Jogador 2");
+        jogador j1 = new_jogador(txt_default.txt[2]);
+        jogador j2 = new_jogador(txt_default.txt[3]);
         mesa matriz_a;
         mesa matriz_b;
         mesa mascara_a;
@@ -68,15 +68,18 @@ void game()
 
         // Inicio
         print_banner(10);
+        printf("%s\n", txt_perguntas.txt[3]);
+        while ((jogadores=read_char('0','2')) < 0)
+        {
+                printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
+        }
 
-        do {
-                printf("Digite o numero de jogadores:  (1-2)\n");
-        } while ((jogadores=read_char('0','2')) < 0);
-
-
-        do {
-                printf("Digite o nivel de dificuldade: (1-3)\n");
-        } while ((nivel=read_char('1','3')) < 0);
+        print_banner(10);
+        printf("%s\n", txt_perguntas.txt[4]);
+        while ((nivel=read_char('1','3')) < 0)
+        {
+                printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
+        }
 
         set_size(nivel);
 
@@ -131,33 +134,26 @@ void game()
                 fill_auto(matriz_b);
         }
 
-
-        print_banner(tam_tabuleiro);
-        print_game(mascara_a, mascara_b);
-        printf("%s %d %s %s%s%s %d %s %s\n", \
-        txt_default.txt[4], j1->pecas, txt_default.txt[5], j1->nome, spaco, \
-        txt_default.txt[4], j2->pecas, txt_default.txt[5], j2->nome);
-
         memset(spaco, ' ', 100);
         vazio = (3*tam_tabuleiro) - strlen(j1->nome) - 8;
         spaco[vazio] = '\0';
+
+        print_banner(tam_tabuleiro);
+        print_game(mascara_a, mascara_b);
+        print_status (j1, j2, spaco);
 
         while (j1->pecas > 0 && j2->pecas > 0)
         {
                 j2->pecas -= joga_1(j1, matriz_b, mascara_b);
                 print_banner(tam_tabuleiro);
                 print_game(mascara_a, mascara_b);
-                printf("%s %d %s %s%s%s %d %s %s\n", \
-                txt_default.txt[4], j1->pecas, txt_default.txt[5], j1->nome, spaco, \
-                txt_default.txt[4], j2->pecas, txt_default.txt[4], j2->nome);
+                print_status (j1, j2, spaco);
 
                 j1->pecas -= joga_2(j2, matriz_a, mascara_a);
                 print_banner(tam_tabuleiro);
                 print_game(mascara_a, mascara_b);
-                printf("%s %d %s %s%s%s %d %s %s\n", \
-                txt_default.txt[4], j1->pecas, txt_default.txt[5], j1->nome, spaco, \
-                txt_default.txt[4], j2->pecas, txt_default.txt[4], j2->nome);
-                }
+                print_status (j1, j2, spaco);
+        }
 
         strcpy(nome, (j1->pecas > 0) ? j1->nome : j2->nome);
 
@@ -180,6 +176,7 @@ static char* read_string (int tam)
         texto = (char*) malloc (tam*sizeof(char));
         memset (texto, '\0', tam);
 
+        fgets (buffer, 100, stdin);
         fgets (buffer, 100, stdin);
         limpa_stdin();
 
@@ -224,11 +221,12 @@ static void to_fill(jogador j, mesa m)
 {
         int p;
 
-        printf("%s\nDeseja preenchimento automatico\n 1 - Sim\n 2 - Nao\n", j->nome);
+        printf("%s\n%s\n %s\n %s\n", \
+        j->nome, txt_perguntas.txt[5], txt_default.txt[6], txt_default.txt[7]);
 
         while ((p = read_char('1','2')) < 0) ;
         {
-                printf("Valor invalido\n");
+                printf("%s\n", txt_falhas.txt[1]);
         }
 
         if (p == 1) fill_man(m);
@@ -295,26 +293,26 @@ static void fill_man(mesa matriz)
                         if (limite[barco] == 0)
                                 printf("Todos os %s ja foram usados.\nTente novamente:\n", \
                                        txt_barcos.txt[barco]);
-                        else printf("Entrada invalida\nTente novamente:\n");
+                        else printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
                 printf("Digite a linha do %s:\n", txt_barcos.txt[barco]);
                 while ((a->linha=read_char('A','A'+tam_tabuleiro)) < 0)
                 {
-                        printf("Entrada invalida\nTente novamente:\n");
+                        printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
                 printf("Digite a coluna do %s:\n", txt_barcos.txt[barco]);
                 while ((a->coluna=read_int(1,tam_tabuleiro)) < 0)
                 {
-                        printf("Entrada invalida\nTente novamente:\n");
+                        printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
                 printf("Digite a orientacao do %s:\n 1 - Horizontal.\n 2 - Vertical.\n", \
                        txt_barcos.txt[barco]);
                 while ((direcao=read_char('1','2')) < 0)
                 {
-                        printf("Entrada invalida\nTente novamente:\n");
+                        printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
                 if ((i=put_nav(matriz, barco+2, a, direcao)) == 0)

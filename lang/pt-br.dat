@@ -1,15 +1,22 @@
-4
+8
 Batalha Naval
 BATALHA NAVAL
 Jogador 1
 Jogador 2
-3
+Restam
+pecas do
+1 - Sim
+2 - Nao
+6
 Deseja jogar novamente? (s/n)
 Digite o nome do primeiro jogador, ou ENTER para default:
 Digite o nome do segundo jogador, ou ENTER para default:
+Digite o numero de jogadores:  (1-2)
+Digite o nivel de dificuldade: (1-3)
+Deseja preenchimento automatico?
 2
 Tente novamente.
-Valor invalido.
+Entrada invalida.
 5
 Corveta
 Submarino

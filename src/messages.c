@@ -76,6 +76,14 @@ void print_banner(int largura)
 
 }
 
+void print_status (jogador j1, jogador j2, char *spaco)
+{
+        printf("%s %d %s %s%s%s %d %s %s\n\n", \
+        txt_default.txt[4], j1->pecas, txt_default.txt[5], j1->nome, spaco, \
+        txt_default.txt[4], j2->pecas, txt_default.txt[5], j2->nome);
+
+}
+
 void congratulation_message() {
     printf("%s\n", txt_tiro_certo.txt[rand()%txt_tiro_certo.qtd]);
 }
