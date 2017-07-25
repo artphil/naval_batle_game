@@ -7,7 +7,7 @@
 
 /* Funcoes internas */
 static void free_txt(texto t);
-static void fill_text (texto *t, FILE *f);
+static void fill_texto (texto *t, FILE *f);
 
 
 /* Variaveis internas */
@@ -30,12 +30,12 @@ void set_language(char *lingua)
                 return;
         }
 
-        fill_text (&txt_default, arq);
-        fill_text (&txt_perguntas, arq);
-        fill_text (&txt_falhas, arq);
-        fill_text (&txt_barcos, arq);
-        fill_text (&txt_tiro_certo, arq);
-        fill_text (&txt_tiro_errado, arq);
+        fill_texto (&txt_default, arq);
+        fill_texto (&txt_perguntas, arq);
+        fill_texto (&txt_falhas, arq);
+        fill_texto (&txt_barcos, arq);
+        fill_texto (&txt_tiro_certo, arq);
+        fill_texto (&txt_tiro_errado, arq);
 
         fclose (arq);
 }
@@ -92,7 +92,7 @@ void fail_message() {
     printf("%s\n", txt_tiro_errado.txt[rand()%txt_tiro_errado.qtd]);
 }
 
-static void fill_text (texto *t, FILE *f)
+static void fill_texto (texto *t, FILE *f)
 {
         int   i;
         char  buffer[100];

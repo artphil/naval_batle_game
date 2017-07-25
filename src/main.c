@@ -12,7 +12,7 @@ void sistema();
 
 int main ()
 {
-        char continuar = 'n';
+        int continuar;
 
         srand(time(NULL));
 
@@ -21,10 +21,16 @@ int main ()
 
         do {
                 game();
-                // printf("Deseja jogar novamente? (s/n)\n");
-                printf("%s\n", txt_perguntas.txt[0]);
-                scanf(" %c", &continuar);
-        } while (continuar == 's');
+                // Deseja jogar novamente?
+                printf("%s\n %s\n %s\n", \
+                txt_perguntas.txt[0], txt_default.txt[6], txt_default.txt[7]);
+
+                while ((continuar = read_char('1','2')) < 0)
+                {
+                        printf("%s\n", txt_falhas.txt[1]);
+                }
+
+        } while (continuar == 0);
 
         free_textos ();
 
