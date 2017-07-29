@@ -59,6 +59,7 @@ void game()
 
         // Inicio
         print_banner(10);
+        // Digite o numero de jogadores:  (1-2)
         printf("%s\n", txt_perguntas.txt[3]);
         while ((jogadores=read_char('0','2')) < 0)
         {
@@ -66,6 +67,7 @@ void game()
         }
 
         print_banner(10);
+        // Digite o nivel de dificuldade: (1-3)
         printf("%s\n", txt_perguntas.txt[4]);
         while ((nivel=read_char('1','3')) < 0)
         {
@@ -88,6 +90,7 @@ void game()
         if (jogadores > 0)
         {
                 print_banner(10);
+                // Digite o nome do primeiro jogador, ou ENTER para default.
                 printf("%s\n", txt_perguntas.txt[1]);
                 jog_set_name(j1, read_string(20));
         }
@@ -95,6 +98,7 @@ void game()
         if (jogadores > 1)
         {
                 print_banner(10);
+                // Digite o nome do segundo jogador, ou ENTER para default.
                 printf("%s\n", txt_perguntas.txt[2]);
                 jog_set_name(j2, read_string(20));
         }
@@ -148,7 +152,11 @@ void game()
 
         strcpy(nome, (j1->pecas > 0) ? j1->nome : j2->nome);
 
-        printf("\nO jogador %s Venceu!!\n\n", nome);
+        print_banner(tam_tabuleiro);
+        print_game_final(matriz_a, mascara_a, matriz_b, mascara_b);
+
+        // O jogador #nome# Venceu!!
+        printf("\n%s %s %s\n\n", txt_default.txt[10], nome, txt_default.txt[11]);
 
         free_jogador(j1);
         free_jogador(j2);
@@ -272,7 +280,8 @@ static void fill_man(mesa matriz)
                 print_banner(10);
                 print_board(matriz);
 
-                printf("Digite o numero barco:\n");
+                // Digite o numero barco.
+                printf("%s\n", txt_perguntas.txt[11]);
                 loop(i, QTD_BARCOS)
                 {
                         if (limite[i] > 0)
@@ -288,18 +297,21 @@ static void fill_man(mesa matriz)
                         else printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
+                // Digite a linha do #barco#
                 printf("%s %s:\n", txt_perguntas.txt[6] ,txt_barcos.txt[barco]);
                 while ((a->linha=read_char('A','A'+tam_tabuleiro)) < 0)
                 {
                         printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
+                // Digite a coluna do #barco#
                 printf("%s %s:\n", txt_perguntas.txt[7] ,txt_barcos.txt[barco]);
                 while ((a->coluna=read_int(1,tam_tabuleiro)) < 0)
                 {
                         printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
+                // Digite a orientacao do #barco#
                 printf("%s %s:\n %s\n %s\n", txt_perguntas.txt[8], \
                 txt_barcos.txt[barco], txt_default.txt[8] , txt_default.txt[9]);
                 while ((direcao=read_char('1','2')) < 0)
@@ -313,11 +325,17 @@ static void fill_man(mesa matriz)
                         total--;
                 }
                 else if (i == 1)
+                {
+                        // Todos os #barco# ja foram usados.
                         printf("%s %s\n%s\n", \
-                               txt_barcos.txt[barco], txt_falhas.txt[4], txt_falhas.txt[0]);
+                        txt_barcos.txt[barco], txt_falhas.txt[4], txt_falhas.txt[0]);
+                }
                 else if (i == 2)
+                {
+                        // #barco# ultrapassa os limites do mapa.
                         printf("%s %s\n%s\n", \
-                               txt_barcos.txt[barco], txt_falhas.txt[5], txt_falhas.txt[0]);
+                        txt_barcos.txt[barco], txt_falhas.txt[5], txt_falhas.txt[0]);
+                }
         }
 
 }
@@ -431,6 +449,7 @@ static int play_man (jogador j, mesa matriz, mesa mascara)
 
         while (fim < 0)
         {
+                // Digite a linha que quer atacar.
                 printf("%s\n", txt_perguntas.txt[9]);
                 a->linha=read_char('A','A'+tam_tabuleiro);
                 while (a->linha < 0)
@@ -440,6 +459,7 @@ static int play_man (jogador j, mesa matriz, mesa mascara)
                 }
 
 
+                // Digite a coluna que quer atacar.
                 printf("%s\n", txt_perguntas.txt[10]);
                 a->coluna=read_int(1, tam_tabuleiro);
                 while (a->coluna < 0)

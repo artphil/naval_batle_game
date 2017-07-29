@@ -12,25 +12,56 @@ void sistema();
 
 int main ()
 {
-        int continuar;
+        int     continuar = 0,
+                opcao;
 
         srand(time(NULL));
 
         set_language ("pt-br");
         sistema ();
 
-        do {
-                game();
-                // Deseja jogar novamente?
-                printf("%s\n %s\n %s\n", \
-                txt_perguntas.txt[0], txt_default.txt[6], txt_default.txt[7]);
-
-                while ((continuar = read_char('1','2')) < 0)
+        while (continuar == 0)
+        {
+                print_banner(10);
+                // 1. Jogar / 2. lingua / 3. Sair
+                printf("\n %s\n\n %s\n\n %s\n\n", \
+                txt_default.txt[12], txt_default.txt[13], txt_default.txt[14]);
+                while ((opcao = read_char('1','3')) < 0)
                 {
-                        printf("%s\n", txt_falhas.txt[1]);
+                        printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
                 }
 
-        } while (continuar == 0);
+                if (opcao == 0)
+                {
+                        game();
+
+                        // Deseja jogar novamente?
+                        printf("%s\n %s\n %s\n", \
+                        txt_perguntas.txt[0], txt_default.txt[6], txt_default.txt[7]);
+
+                        while ((continuar = read_char('1','2')) < 0)
+                        {
+                                printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
+                        }
+                }
+                else
+                if (opcao == 1)
+                {
+                        // 1. Portugues / 2. English
+                        printf("\n %s\n %s\n", \
+                        txt_default.txt[15], txt_default.txt[16]);
+                        while ((opcao = read_char('1','2')) < 0)
+                        {
+                                printf("%s\n%s\n", txt_falhas.txt[1], txt_falhas.txt[0]);
+                        }
+
+                        if (opcao == 0) set_language ("pt-br");
+                        if (opcao == 1) set_language ("en");
+
+                }
+                else
+                if (opcao == 2) continuar = 1;
+        }
 
         free_textos ();
 

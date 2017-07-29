@@ -27,6 +27,9 @@ void print_board(mesa matriz);
 // Imprime os dois tabuleiros com borda alfanumerica
 void print_game(mesa m_a, mesa m_b);
 
+// Imprime os dois tabuleiros descobertos
+void print_game_final(mesa mx_a, mesa mc_a, mesa mx_b, mesa mc_b);
+
 // Insere um barco no tabuleiro
 int put_nav(mesa matriz, int barco, alvo a, int dir);
 

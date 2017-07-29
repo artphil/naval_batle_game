@@ -29,15 +29,20 @@ da **U**niversidade **F**ederal de **M**inas **G**erais ([UFMG](https://www.ufmg
 O intuito  deste projeto é praticar os conceitos aprendidos durante curso de Sistemas de Informação da [UFMG](https://www.ufmg.br/) e desenvolver um jogo intuitivo e divertido.
 
 ## Batalha Naval
-Batalha Naval é um jogo para dois jogadores, onde cada jogador que possue um tabuleiro e alguns barcos de tamanhos variados (mesma quantidade e tipo barcos).</br>
+Batalha Naval é um jogo para dois jogadores, onde cada jogador que possue um tabuleiro e alguns barcos de tamanhos variados (mesma quantidade e tipo barcos).
+
 Cada jogador posiciona todos seus barcos em seu tabuleiro sem que o adversário veja, e após isso começa a batalha. Os jogadores
-deveram acertar os barcos inimigos disparando tiros no tabuleiro adversário, cada um tem direito a um tiro por vez e os barcos só são destruídos se todas as suas partes são aingidas.</br>
+deveram acertar os barcos inimigos disparando tiros no tabuleiro adversário, cada um tem direito a um tiro por vez e os barcos só são destruídos se todas as suas partes são aingidas.
+
 O primeiro jogador que eliminar todos os barcos do adversário vence a partida.
 
 ## Instalação
-Clone o repositório `$ git clone github.com/artphil7/naval_batle_game/` ou faça o [download](https://github.com/artphil7/naval_batle_game/archive/master.zip) do arquivo .zip e extraia-o.</br>
-Compile código com o comando `$ make` (ou `$ gcc -o nav_bat.exe main.c game.c board.c player.c target.c` caso não tenha makefile).</br>
-Recomendo o GCC, para Windows pode ser obtido através da instalação do  [MinGW](https://sourceforge.net/projects/mingw/files/).</br>
+Clone o repositório `$ git clone github.com/artphil7/naval_batle_game/` ou faça o [download](https://github.com/artphil7/naval_batle_game/archive/master.zip) do arquivo .zip e extraia-o.
+
+Compile código com o comando `$ make` (ou `$ gcc -o nav_bat.exe main.c game.c board.c player.c target.c` caso não tenha makefile).
+
+Recomendo o GCC, para Windows pode ser obtido através da instalação do  [MinGW](https://sourceforge.net/projects/mingw/files/).
+
 Execute o comando `$ ./nav_bat.exe` e seguir as istruções da tela.  
 
 ## Desenvolvimento e organização
@@ -77,7 +82,7 @@ Definições dos alvos utilizados pelas TADs _board_ e _player_.</br>
 
 ### messages
 Todos os textos utilizados no jogo são manupulados por essa TAD, possibilitando o uso de outras linguas na utilização do jogo.</br>
-os textos utilizados aqui encontram-se na pasta _lang/_.</br>
+Os textos utilizados aqui encontram-se na pasta _lang/_.</br>
 [messages.c](src/messages.c)</br>
 [messages.h](src/messages.h)</br>
 
@@ -97,31 +102,36 @@ Prortuguês : [pt-br](lang/pt-br.dat)</br>
 A Inteligência do jogo consiste em como dispor os barcos no tabuleiro de forma a não ficarem muito fáceis de achar e em como encontrar o barco inimigo de maneira eficiente.
 
 ### Desafios
-A disposição dos barcos deve ser de forma não repetitiva e menos agrupada possivel a fim de de não gerar metodos infaliveis de derrotar a máqiuina.</br>
-Para o ataque, os alvos devem ser escolhidos de tal forma que possibilite vencer a batalha no menor numero de rodadas, evitando que o inimigo o faça primeiro.</br>
+A disposição dos barcos deve ser de forma não repetitiva e menos agrupada possivel a fim de de não gerar metodos infaliveis de derrotar a máqiuina.
+
+Para o ataque, os alvos devem ser escolhidos de tal forma que possibilite vencer a batalha no menor numero de rodadas, evitando que o inimigo o faça primeiro.
 
 ### Implementação
-Para evitar repetições previsíveis utilizou-se de aleatoriedade com a função _rand()_ disponivel no _C_ com a semente de aleatoriedade sendo a hora global atual fornecida pela biblioteca _time_.</br>
-Para inserir os barcos no tabuleiro optou-se pela simplicidade, escolhendo  a posição e a orientação de forma aleatórias encontrou-se um resultado aceitável para as expectativas iniciais, pois tanto os barcos se configuraram de formas bem distintas a cada partida e como em média se espalhavam pelo tabuleiro de acordo com o esperado.</br>
-A Implementação pode ser encontrada na função fill_auto() no arquivo [game.c](src/game.c)</br></br>
-A escolha do alvo de ataque, a principio, é feita de forma aleatória, porém assim não se aproveita o fato das partes do barco ficarem adjascentes, por isso pensou-se em guardar o ultimo alvo com  sucesso, mas se errasse a direção escolhida e o próximo alvo falhasse a busca parava naquele ponto. Para resolver esse problema fez-se uma pilha e a cada sucesso armazenava-se todos os alvos em redor, o que possibilitava atingir o barco inteiro, mas gerava um desperdicio de tiros pois atingia todas as posições ao redor do barco. Por fim decediu-se por fazer uma verificação das casas em redor para selecionar apenas os alvos mais prováveis e chegou-se ao seguinte algoritmo:</br>
+Para evitar repetições previsíveis utilizou-se de aleatoriedade com a função _rand()_ disponivel no _C_ com a semente de aleatoriedade sendo a hora global atual fornecida pela biblioteca _time_.
 
-`Se existe alvos na pilha:`                     </br>
-* `Seleciona proximo alvo.`                     </br>
+Para inserir os barcos no tabuleiro optou-se pela simplicidade, escolhendo  a posição e a orientação de forma aleatórias encontrou-se um resultado aceitável para as expectativas iniciais, pois tanto os barcos se configuraram de formas bem distintas a cada partida e como em média se espalhavam pelo tabuleiro de acordo com o esperado.
 
-`Senão:`                                        </br>
-* `Escolhe um alvo aleatório.`                  </br>
+A Implementação pode ser encontrada na função fill_auto() no arquivo [game.c](src/game.c)
 
-`Efetua o disparo.`                             </br>
+A escolha do alvo de ataque, a principio, é feita de forma aleatória, porém assim não se aproveita o fato das partes do barco ficarem adjascentes, por isso pensou-se em guardar o ultimo alvo com  sucesso, mas se errasse a direção escolhida e o próximo alvo falhasse a busca parava naquele ponto. Para resolver esse problema fez-se uma pilha e a cada sucesso armazenava-se todos os alvos em redor, o que possibilitava atingir o barco inteiro, mas gerava um desperdicio de tiros pois atingia todas as posições ao redor do barco. Por fim decediu-se por fazer uma verificação das casas em redor para selecionar apenas os alvos mais prováveis e chegou-se ao seguinte algoritmo:
 
-`Se acertou:`                                   </br>
-* `Se existe alvos na pilha:`                   </br>
- * `Para cada direção:`                         </br>
-   *  `Se acertou posição adjascente:`          </br>
-     * `adiciona posição oposta na pilha.`      </br>
+> `Se existe alvos na pilha:`
+> > `Seleciona proximo alvo.`
 
-* `Senão:`                                      </br>
- * `Adiciona todas as pocições adjascentes.`    </br>
+> `Senão:`
+> > `Escolhe um alvo aleatório.`
 
-Com isso, quando um barco é encontrado, este é atingido por completo e só são gastos tiros na adjascencia do alvo inicial. </br>
+> `Efetua o disparo.`
+
+> `Se acertou:`
+> > `Se existe alvos na pilha:`
+> > > `Para cada direção:`
+> > > > `Se acertou posição adjascente:`
+> > > > > `Adiciona posição oposta na pilha.`
+
+> `Senão:`
+> > `Adiciona todas as pocições adjascentes.`
+
+Com isso, quando um barco é encontrado, este é atingido por completo e só são gastos tiros na adjascencia do alvo inicial.
+
 A Implementação pode ser encontrada na função play_auto() no arquivo [game.c](src/game.c)</br>

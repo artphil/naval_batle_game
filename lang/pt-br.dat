@@ -1,4 +1,4 @@
-10
+17
 Batalha Naval
 BATALHA NAVAL
 Jogador 1
@@ -9,7 +9,14 @@ pecas do
 2 - Nao.
 1 - Horizontal.
 2 - Vertical.
-11
+O jogador
+Venceu!!!
+1 - Jogar.
+2 - Lingua.
+3 - Sair.
+1 - Portugues
+2 - English
+12
 Deseja jogar novamente?
 Digite o nome do primeiro jogador, ou ENTER para default.
 Digite o nome do segundo jogador, ou ENTER para default.
@@ -21,6 +28,7 @@ Digite a coluna do
 Digite a orientacao do
 Digite a linha que quer atacar.
 Digite a coluna que quer atacar.
+Digite o numero barco.
 7
 Tente novamente.
 Entrada invalida.

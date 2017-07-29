@@ -120,3 +120,79 @@ void print_game(mesa m_a, mesa m_b)
         }
         printf("\n");
 }
+
+void print_game_final(mesa mx_a, mesa mc_a, mesa mx_b, mesa mc_b)
+{
+        int i, j;
+
+        // Tabuleiros
+        printf("   ");
+        loop(i,tam_tabuleiro) printf("%2d ", (1+i));
+        printf("       ");
+        loop(i,tam_tabuleiro) printf("%2d ", (1+i));
+        printf("\n\n");
+
+        loop(i,tam_tabuleiro)
+        {
+                printf("%c   ", ('A'+i));
+                loop(j,tam_tabuleiro)
+                {
+                        if (mc_a[i][j]==NADA)
+                        {
+                                if (mx_a[i][j]==AGUA)
+                                {
+                                        printf(CYN);
+                                        printf("%c  ", mx_a[i][j]);
+                                }
+                                else
+                                {
+                                        printf(WHT);
+                                        printf("%c  ", mx_a[i][j]);
+                                }
+                        }
+                        else if (mc_a[i][j]==ERRO)
+                        {
+                                printf(RED);
+                                printf("%c  ", mc_a[i][j]);
+                        }
+                        else if (mc_a[i][j]==DANO)
+                        {
+                                printf(GRN);
+                                printf("%c  ", mc_a[i][j]);
+                        }
+                        printf(RESET);
+                }
+                printf("       ");
+                loop(j,tam_tabuleiro)
+                {
+                        if (mc_b[i][j]==NADA)
+                        {
+                                if (mx_b[i][j]==AGUA)
+                                {
+                                        printf(CYN);
+                                        printf("%c  ", mx_b[i][j]);
+                                }
+                                else
+                                {
+                                        printf(WHT);
+                                        printf("%c  ", mx_b[i][j]);
+                                }
+                        }
+                        else if (mc_b[i][j]==ERRO)
+                        {
+                                printf(RED);
+                                printf("%c  ", mc_b[i][j]);
+                        }
+                        else if (mc_b[i][j]==DANO)
+                        {
+                                printf(GRN);
+                                printf("%c  ", mc_b[i][j]);
+                        }
+                        printf(RESET);
+
+                }
+                printf("   %c", ('A'+i));
+                printf("\n");
+        }
+        printf("\n");
+}
