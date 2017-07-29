@@ -20,7 +20,7 @@ da **U**niversidade **F**ederal de **M**inas **G**erais ([UFMG](https://www.ufmg
     * [messages](#messages)
     * [source](#source)
     * [makefile](#makefile)
-    * [lang/](#lang/)
+    * [lang/](#lang)
 * [Inteligencia](#inteligencia)
     * [Desafios](#desafios)
     * [Implementação](#implementação)
