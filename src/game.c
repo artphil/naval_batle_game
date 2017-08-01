@@ -224,7 +224,7 @@ static void to_fill(jogador j, mesa m)
         printf("%s\n%s\n %s\n %s\n", \
         j->nome, txt_perguntas.txt[5], txt_default.txt[6], txt_default.txt[7]);
 
-        while ((p = read_char('1','2')) < 0) ;
+        while ((p = read_char('1','2')) < 0)
         {
                 printf("%s\n", txt_falhas.txt[1]);
         }
