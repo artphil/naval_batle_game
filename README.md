@@ -39,7 +39,7 @@ O primeiro jogador que eliminar todos os barcos do adversário vence a partida.
 ## Instalação
 Clone o repositório `$ git clone github.com/artphil7/naval_batle_game/` ou faça o [download](https://github.com/artphil7/naval_batle_game/archive/master.zip) do arquivo .zip e extraia-o.
 
-Compile código com o makefile `$ make`, pelo shel `$ bash compila.sh` (colocando seu shel no lugar de bash) ou da forma direta`$ gcc -o nav_bat.exe src/main.c src/game.c src/player.c src/board.c src/target.c src/messages.c` na pasta principal.
+Compile código com o makefile `$ make`, pelo shel `$ bash compila.sh` (colocando seu shel no lugar de bash) ou da forma direta`$ gcc -o nav_bat.exe src/main.c src/game.c src/player.c src/board.c src/target.c src/messages.c` na pasta raiz.
 
 Recomendo o GCC, para Windows pode ser obtido através da instalação do  [MinGW](https://sourceforge.net/projects/mingw/files/).
 
