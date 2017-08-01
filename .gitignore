@@ -2,7 +2,6 @@
 
 # Objetos
 *.o
-obj/*
 
 # Executaveis
 *.exe
