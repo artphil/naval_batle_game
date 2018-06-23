@@ -16,7 +16,7 @@
 // Faz tosas as tarefas referentes a batalha
 void game();
 
-void limpa_stdin();
+void clean_stdin();
 
 // Le uma sequencia de caracteres da tela
 char* read_string (int tam);

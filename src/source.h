@@ -41,7 +41,7 @@ char   *limpa_tela;
 int     tam_tabuleiro;
 
 // Definicao de funcoes globais
-void limpa_stdin();
+void clean_stdin();
 
 // Numero tipo de barcos
 #define QTD_BARCOS 5
@@ -72,5 +72,8 @@ void limpa_stdin();
 
 // Simplifacacao de funcoes
 #define loop(i,a) for(i=0;i<a;i++)
+
+// TAD global
+typedef struct PONTO {int x,y;} ponto;
 
 #endif

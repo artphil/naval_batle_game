@@ -82,7 +82,7 @@ void sistema()
         #endif
 }
 
-void limpa_stdin()
+void clean_stdin()
 {
         setbuf(stdin, 0);
 }

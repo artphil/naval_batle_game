@@ -177,7 +177,7 @@ char* read_string (int tam)
 
         fgets (buffer, 100, stdin);
         fgets (buffer, 100, stdin);
-        limpa_stdin();
+        clean_stdin();
 
         while (buffer[letra] != '\n' && letra < tam)
         {
@@ -193,7 +193,7 @@ int read_char (char inicio, char fim)
         char c;
 
         scanf(" %c", &c);
-        limpa_stdin();
+        clean_stdin();
 
         c = toupper(c);
 
@@ -208,7 +208,7 @@ int read_int (int inicio, int fim)
         int c;
 
         scanf(" %d", &c);
-        limpa_stdin();
+        clean_stdin();
 
         if (c < inicio) return -1;
         if (c > fim) return -1;
